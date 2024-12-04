@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Hive - Your Wellness Hub</title>
+    {% load static %}
+    <!-- Updated link to the homestyles.css file -->
+    <link rel="stylesheet" href="{% static 'home/homestyles.css' %}">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Health Hive</h1>
+            <p>Your Wellness Hub</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="{% url 'login' %}" class="cta-button">Login</a></li> <!-- Login button -->
+                <li><a href="{% url 'signup' %}" class="cta-button">Sign Up</a></li> <!-- Sign Up button -->
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Welcome to Health Hive</h2>
+            <p>Join our community and take the first step towards a healthier you!</p>
+            <a href="{% url 'signup' %}" class="cta-button">Get Started</a>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <h2>About Us</h2>
+        <p>At Health Hive, we provide resources, support, and a community for individuals seeking to live a healthier life. From wellness tips to fitness advice, we're here to help you thrive!</p>
+    </section>
+
+    <section id="services" class="services">
+        <h2>Our Services</h2>
+        <div class="service">
+            <h3>Fitness Plans</h3>
+            <p>Personalized fitness plans tailored to your goals.</p>
+        </div>
+        <div class="service">
+            <h3>Nutrition Advice</h3>
+            <p>Healthy meal plans and tips from experts.</p>
+        </div>
+        <div class="service">
+            <h3>Wellness Coaching</h3>
+            <p>Get one-on-one coaching for holistic health.</p>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <h2>Contact Us</h2>
+        <p>Have questions? We'd love to hear from you. Reach out to us for more information.</p>
+        <a href="mailto:contact@healthhive.com" class="cta-button">Email Us</a>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Health Hive. All rights reserved.</p>
+    </footer>
+</body>
+</html>
