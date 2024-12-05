@@ -7,188 +7,129 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #fafafa;
+    background-color: #f4f4f9;
     color: #333;
 }
 
-a {
-    text-decoration: none;
-    color: inherit;
-}
-
-/* Header Styles */
 header {
-    background-color: #FFEB3B; /* Soft yellow, like bees */
+    background-color: #fff;
     padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-header .logo h1 {
-    font-family: 'Cursive', sans-serif;
-    font-size: 2.5em;
-    color: #FF5722; /* Floral orange */
+.logo h1 {
+    color: #FF5722; /* Orange color */
+    text-align: center;
 }
 
-header nav ul {
-    list-style: none;
+nav ul {
     display: flex;
+    justify-content: center;
     gap: 20px;
 }
 
-header nav ul li {
-    font-size: 1.2em;
-}
-
-header nav ul li a {
+nav a {
     color: #333;
-    font-weight: bold;
-    transition: color 0.3s ease;
+    font-size: 1.1em;
+    text-decoration: none;
 }
 
-header nav ul li a:hover {
-    color: #FF5722;
-}
-
-/* Hero Section Styles */
-.hero {
-    background: url('{% static "home/images/flowers-bg.jpg" %}') no-repeat center center/cover;
-    color: #fff;
-    text-align: center;
-    padding: 100px 20px;
-}
-
-.hero-content {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.hero h2 {
-    font-size: 3em;
-    font-family: 'Cursive', sans-serif;
-    color: #2c3e50; /* Darker text color for better visibility */
-}
-
-.hero p {
-    font-size: 1.3em;
-    margin-bottom: 30px;
-    color: #34495e; /* Slightly darker text color for better visibility */
-}
-
-/* Call-to-action Button Styles */
-.cta-button {
+nav a.cta-button {
     background-color: #FF5722;
-    color: #fff;
-    padding: 15px 30px;
-    border-radius: 25px;
-    font-size: 1.2em;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
     transition: background-color 0.3s ease;
 }
 
-.cta-button:hover {
+nav a.cta-button:hover {
     background-color: #FF7043;
 }
 
-/* About Section Styles */
-.about {
+.hero {
+    background-color: #FF5722;
+    color: white;
+    padding: 60px 0;
     text-align: center;
-    padding: 50px 20px;
-    background-color: #FFEB3B;
 }
 
-.about h2 {
+.hero-content h2 {
     font-size: 2.5em;
     margin-bottom: 20px;
 }
 
-.about p {
+.hero-content p {
     font-size: 1.2em;
-    max-width: 800px;
-    margin: 0 auto;
+    margin-bottom: 30px;
 }
 
-/* Services Section Styles */
-.services {
-    display: flex;
-    justify-content: space-around;
-    padding: 50px 20px;
-    background-color: #fff;
-}
-
-.services h2 {
-    font-size: 2.5em;
-    text-align: center;
-    width: 100%;
-    margin-bottom: 40px;
-}
-
-.service {
-    background-color: #FF5722;
-    color: white;
-    padding: 20px;
-    width: 30%;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.hero .cta-button {
+    background-color: white;
+    color: #FF5722;
+    font-size: 1.2em;
+    padding: 15px 30px;
+    border-radius: 5px;
+    text-decoration: none;
     transition: background-color 0.3s ease;
 }
 
-.service:hover {
+.hero .cta-button:hover {
     background-color: #FF7043;
+}
+
+.about, .services, .contact {
+    padding: 50px 20px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.about h2, .services h2, .contact h2 {
+    font-size: 2.5em;
+    color: #FF5722;
+}
+
+.services {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+.service {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 30%;
+    text-align: center;
 }
 
 .service h3 {
     font-size: 1.8em;
-    margin-bottom: 10px;
+    color: #FF5722;
 }
 
-.service p {
-    font-size: 1.2em;
-}
-
-/* Contact Section Styles */
-.contact {
-    background-color: #FFEB3B;
-    text-align: center;
-    padding: 50px 20px;
-}
-
-.contact h2 {
-    font-size: 2.5em;
-    margin-bottom: 20px;
-}
-
-.contact p {
-    font-size: 1.2em;
-    margin-bottom: 30px;
-}
-
-/* Footer Styles */
-footer {
-    background-color: #333;
+.contact a.cta-button {
+    background-color: #FF5722;
     color: white;
-    text-align: center;
-    padding: 20px;
-}
-
-/* Login and Sign Up Button Styles */
-.header-buttons {
-    display: flex;
-    gap: 20px;
-}
-
-.header-buttons .cta-button {
-    background-color: #2ecc71; /* Green color for "Sign Up" and "Login" buttons */
-    color: #fff;
-    padding: 15px 30px;
-    border-radius: 25px;
     font-size: 1.2em;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px 30px;
+    border-radius: 5px;
+    text-decoration: none;
     transition: background-color 0.3s ease;
 }
 
-.header-buttons .cta-button:hover {
-    background-color: #27ae60; /* Darker green on hover */
+.contact a.cta-button:hover {
+    background-color: #FF7043;
+}
+
+footer {
+    background-color: #fff;
+    text-align: center;
+    padding: 20px 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+footer p {
+    font-size: 1em;
+    color: #777;
 }

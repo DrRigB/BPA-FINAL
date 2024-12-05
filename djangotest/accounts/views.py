@@ -15,7 +15,9 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('home')  # Redirect to home or dashboard after successful login
+            return redirect('home')  # Adjust this to the correct URL name for your home page.
     else:
         form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+
+    # Render the correct template with the form.
+    return render(request, 'accounts/login.html', {'form': form})
