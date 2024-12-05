@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            position: relative;
+        }
+        .container {
+            text-align: center;
+            transition: filter 0.3s ease;
+        }
+        .profile {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #ccc;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .profile img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+        /* Dialog box */
+        .dialog {
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            display: none;
+            flex-direction: column;
+            width: 150px;
+            z-index: 2;
+        }
+        .dialog div {
+            padding: 10px;
+            cursor: pointer;
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+        }
+        .dialog div:last-child {
+            border-bottom: none;
+        }
+        .dialog div:hover {
+            background-color: #f0f0f0;
+        }
+        .blur {
+            filter: blur(5px); /* Apply blur */
+        }
+        /* Placeholder GIF styling */
+        .gif-container img {
+            max-width: 80%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile" onclick="toggleDialog()">
+        <img src="https://via.placeholder.com/50" alt="Profile Picture">
+    </div>
+    <!-- Dialog Box -->
+    <div class="dialog" id="dialog-box">
+        <div onclick="alert('Account Clicked')">Account</div>
+        <div onclick="alert('Public Profile Clicked')">Public Profile</div>
+        <div onclick="alert('Settings Clicked')">Settings</div>
+    </div>
+    <!-- Main Content -->
+    <div class="container" id="main-content">
+        <div class="gif-container">
+            <img src="bazinga-young-sheldon.gif" alt="bazinga">
+        </div>
+    </div>
+
+    <script>
+        function toggleDialog() {
+            const dialog = document.getElementById('dialog-box');
+            const mainContent = document.getElementById('main-content');
+            if (dialog.style.display === 'flex') {
+                dialog.style.display = 'none';
+                mainContent.classList.remove('blur'); // Remove blur
+            } else {
+                dialog.style.display = 'flex';
+                mainContent.classList.add('blur'); // Add blur
+            }
+        }
+    </script>
+</body>
+</html>

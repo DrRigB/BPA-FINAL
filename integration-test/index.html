@@ -4,26 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+        }
+        input {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Create Account</h1>
-        <form class="signup-form">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" placeholder="Enter your username" required>
+    <h1>Sign Up</h1>
+    <form id="signup-form">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <input type="password" id="confirm-password" placeholder="Confirm Password" required>
+        <button type="submit">Create Account</button>
+    </form>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+    <script>
+        // Populate the form with URL parameters
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            document.getElementById('username').value = params.get('username') || '';
+            document.getElementById('email').value = params.get('email') || '';
+            document.getElementById('password').value = params.get('password') || '';
+            document.getElementById('confirm-password').value = params.get('confirm-password') || '';
+        };
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" placeholder="Enter your password" required>
-
-            <label for="confirm-password">Confirm Password:</label>
-            <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
-
-            <button type="submit">Sign Up</button>
-        </form>
-    </div>
+        // Handle form submission
+        document.getElementById('signup-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form from submitting traditionally
+            const username = document.getElementById('username').value;
+            // Store the username in session storage
+            sessionStorage.setItem('username', username);
+            // Redirect to the home page
+            window.location.href = 'home.html';
+        });
+    </script>
 </body>
 </html>
