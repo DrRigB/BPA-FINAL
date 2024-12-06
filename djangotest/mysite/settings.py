@@ -118,8 +118,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+# mysite/settings.py
+
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Static file settings
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# Directories where static files are stored
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # Global static files (e.g., CSS, JS, images)
+    # Add any additional static directories if necessary
+    BASE_DIR / "accounts" / "static",  # Static folder inside the accounts app
+    BASE_DIR / "home" / "static",      # Static folder inside the home app
+]
+
+# For production (collect static files here)
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
