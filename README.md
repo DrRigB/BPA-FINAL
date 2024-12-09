@@ -56,7 +56,7 @@ Before setting up the project locally, ensure you have the following installed:
 
 1. Clone the repository to your local machine:
    ```bash
-   git clone https://github.com/yourusername/healthhive.git
+   git clone https://github.com/nxtcarson/healthhive
    cd healthhive
    cd djangotest
    python manage.py runserver
