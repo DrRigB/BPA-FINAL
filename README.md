@@ -27,7 +27,7 @@ HealthHive is a full-stack application built using modern web technologies. It a
 
 - **Frontend:**
   - HTML5, CSS3, JavaScript
-  - Framework: React.js (or whatever you’re using)
+  - Framework: React.js, Django
   - Libraries: Bootstrap, Chart.js (for data visualization)
   
 - **Backend:**
