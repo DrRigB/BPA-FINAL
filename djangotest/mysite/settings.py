@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'home',
+    'tracker',
     
 ]
 
@@ -133,6 +134,7 @@ STATICFILES_DIRS = [
     # Add any additional static directories if necessary
     BASE_DIR / "accounts" / "static",  # Static folder inside the accounts app
     BASE_DIR / "home" / "static",      # Static folder inside the home app
+     BASE_DIR / 'tracker' / 'static',  # Make sure this is correct
 ]
 
 # For production (collect static files here)

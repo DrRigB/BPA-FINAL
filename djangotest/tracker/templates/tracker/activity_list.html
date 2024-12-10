@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity List</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'tracker/trackerstyles.css' %}">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Track Your Activity</h1>
+
+        <!-- Activity Form -->
+        <h2>Add New Activity</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit Activity</button>
+        </form>
+
+        <hr>
+
+        <!-- Existing Activities List -->
+        <h2>Activities</h2>
+        <ul>
+            {% for activity in activities %}
+                <li>
+                    <strong>{{ activity.name }}</strong><br>
+                    Duration: {{ activity.duration }} mins<br>
+                    Calories Burned: {{ activity.calories_burned }} kcal
+                </li>
+            {% empty %}
+                <li>No activities recorded yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</body>
+</html>

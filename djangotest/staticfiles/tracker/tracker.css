@@ -1,0 +1,43 @@
+#fitness-tracker {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#fitness-tracker h2 {
+    font-size: 2em;
+    text-align: center;
+    color: #FF5722;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+form .btn {
+    padding: 10px 20px;
+    background-color: #FF5722;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form .btn:hover {
+    background-color: #e64a19;
+}
+
+.alert-success {
+    color: green;
+    text-align: center;
+    padding: 10px;
+    background-color: #e8f5e9;
+    border: 1px solid #388e3c;
+    border-radius: 5px;
+}
