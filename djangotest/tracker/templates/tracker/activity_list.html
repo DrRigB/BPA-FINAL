@@ -1,42 +1,41 @@
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activity List</title>
-    {% load static %}
+    <title>Activity Tracker</title>
     <link rel="stylesheet" href="{% static 'tracker/trackerstyles.css' %}">
 </head>
 <body>
-
     <div class="container">
-        <h1>Track Your Activity</h1>
+        <h1>Activity Tracker</h1>
 
-        <!-- Activity Form -->
-        <h2>Add New Activity</h2>
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Submit Activity</button>
-        </form>
+        <div class="form-section">
+            <h2>Add New Activity</h2>
+            <form method="POST" action="{% url 'tracker' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Track Activity</button>
+            </form>
+        </div>
 
-        <hr>
-
-        <!-- Existing Activities List -->
-        <h2>Activities</h2>
-        <ul>
+        <div class="activity-list">
+            <h2>Tracked Activities</h2>
             {% for activity in activities %}
-                <li>
-                    <strong>{{ activity.name }}</strong><br>
-                    Duration: {{ activity.duration }} mins<br>
-                    Calories Burned: {{ activity.calories_burned }} kcal
-                </li>
+            <div class="activity-card">
+                <div class="activity-title">{{ activity.name }}</div>
+                <div class="activity-details">
+                    <p><strong>Date:</strong> {{ activity.date }}</p>
+                    <p><strong>Duration:</strong> {{ activity.duration_minutes }} minutes</p>
+                    <p><strong>Heart Rate:</strong> {{ activity.heart_rate }} bpm</p>
+                    <p><strong>Calories Burned:</strong> {{ activity.calories_burned }}</p>
+                </div>
+            </div>
             {% empty %}
-                <li>No activities recorded yet.</li>
+            <p>No activities recorded yet.</p>
             {% endfor %}
-        </ul>
+        </div>
     </div>
-
 </body>
 </html>

@@ -123,18 +123,16 @@ USE_TZ = True
 
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Static file settings
 STATIC_URL = 'static/'
 
 # Directories where static files are stored
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Global static files (e.g., CSS, JS, images)
-    # Add any additional static directories if necessary
-    BASE_DIR / "accounts" / "static",  # Static folder inside the accounts app
-    BASE_DIR / "home" / "static",      # Static folder inside the home app
-     BASE_DIR / 'tracker' / 'static',  # Make sure this is correct
+    BASE_DIR / "static",  # Global static files
+    BASE_DIR / "accounts" / "static",  # Accounts app static
+    BASE_DIR / "home" / "static",      # Home app static
+    BASE_DIR / "tracker" / "static",   # Tracker app static
 ]
 
 # For production (collect static files here)
