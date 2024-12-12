@@ -1,0 +1,86 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f9fc;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.container {
+    width: 80%;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+h1 {
+    text-align: center;
+    color: #ff6600;
+}
+
+/* Form Section */
+.form-section {
+    margin-bottom: 30px;
+    padding: 10px;
+    border-bottom: 2px solid #ddd;
+}
+
+.form-section h2 {
+    margin-bottom: 10px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+button[type="submit"] {
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #e05500;
+}
+
+/* Activity Cards */
+.activity-list h2 {
+    margin-bottom: 15px;
+    color: #444;
+}
+
+.activity-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.activity-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #ff6600;
+    margin-bottom: 8px;
+}
+
+.activity-details {
+    font-size: 0.9em;
+    color: #555;
+}
+
+.activity-details p {
+    margin: 4px 0;
+}

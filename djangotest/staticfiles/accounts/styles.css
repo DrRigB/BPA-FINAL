@@ -1,0 +1,79 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px; /* Added padding around the body */
+}
+
+.container {
+    background-color: white;
+    padding: 40px; /* Increased padding for more space */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto; /* Ensures it's centered */
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px; /* Increased bottom margin for more space */
+    font-size: 26px; /* Slightly larger font size for better readability */
+}
+
+.signup-form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin: 12px 0; /* Increased margin between labels and inputs */
+    font-size: 16px; /* Increased label font size */
+}
+
+input {
+    padding: 12px; /* Increased padding for a more spacious feel */
+    margin-bottom: 20px; /* Increased margin between input fields */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 18px; /* Increased font size for inputs */
+}
+
+button {
+    padding: 14px; /* Increased padding for the button */
+    background-color: #FF5722; /* Orange color */
+    color: white;
+    font-size: 18px; /* Slightly larger font size for the button */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #FF7043; /* Lighter orange on hover */
+}
+
+/* Add some extra spacing at the bottom */
+.signup-link {
+    text-align: center;
+    font-size: 16px; /* Slightly larger font for readability */
+    margin-top: 20px; /* Added more space on top */
+}
+
+.signup-link a {
+    color: #FF5722;
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Tracker</title>
+    <link rel="stylesheet" href="{% static 'tracker/trackerstyles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Activity Tracker</h1>
+
+        <div class="form-section">
+            <h2>Add New Activity</h2>
+            <form method="POST" action="{% url 'tracker' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Track Activity</button>
+            </form>
+        </div>
+
+        <div class="activity-list">
+            <h2>Tracked Activities</h2>
+            {% for activity in activities %}
+            <div class="activity-card">
+                <div class="activity-title">{{ activity.name }}</div>
+                <div class="activity-details">
+                    <p><strong>Date:</strong> {{ activity.date }}</p>
+                    <p><strong>Duration:</strong> {{ activity.duration_minutes }} minutes</p>
+                    <p><strong>Heart Rate:</strong> {{ activity.heart_rate }} bpm</p>
+                    <p><strong>Calories Burned:</strong> {{ activity.calories_burned }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <p>No activities recorded yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

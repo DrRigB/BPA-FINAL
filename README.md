@@ -27,7 +27,7 @@ HealthHive is a full-stack application built using modern web technologies. It a
 
 - **Frontend:**
   - HTML5, CSS3, JavaScript
-  - Framework: React.js (or whatever you’re using)
+  - Framework: React.js, Django
   - Libraries: Bootstrap, Chart.js (for data visualization)
   
 - **Backend:**
@@ -48,10 +48,15 @@ Before setting up the project locally, ensure you have the following installed:
 - [MySQL](https://www.mysql.com/)
 - [npm](https://www.npmjs.com/)
 - [Git](https://git-scm.com/)
+  ```bash
+  pip install django
+  pip install mysql
 
 ### Setup
 
 1. Clone the repository to your local machine:
    ```bash
-   git clone https://github.com/yourusername/healthhive.git
+   git clone https://github.com/nxtcarson/healthhive
    cd healthhive
+   cd djangotest
+   python manage.py runserver
