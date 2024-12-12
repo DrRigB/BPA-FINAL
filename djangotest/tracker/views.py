@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from .models import Activity
 from .forms import ActivityForm
+from django.shortcuts import get_object_or_404
+
+
 
 def activity_list(request):
     activities = Activity.objects.all()  # Get all activities to display
@@ -19,3 +22,9 @@ def track_activity(request):
 
     activities = Activity.objects.all()  # Get all activities to display
     return render(request, 'tracker/activity_list.html', {'form': form, 'activities': activities})
+
+def delete_activity(request, pk):
+    activity = get_object_or_404(Activity, pk=pk)
+    if request.method == "POST":
+        activity.delete()
+        return redirect('activity_list')

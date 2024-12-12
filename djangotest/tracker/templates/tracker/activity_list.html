@@ -24,7 +24,13 @@
             <h2>Tracked Activities</h2>
             {% for activity in activities %}
             <div class="activity-card">
-                <div class="activity-title">{{ activity.name }}</div>
+                <div class="activity-title">
+                    {{ activity.name }}
+                    <form method="POST" action="{% url 'delete_activity' activity.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Delete</button>
+                    </form>
+                </div>
                 <div class="activity-details">
                     <p><strong>Date:</strong> {{ activity.date }}</p>
                     <p><strong>Duration:</strong> {{ activity.duration_minutes }} minutes</p>
