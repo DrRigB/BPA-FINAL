@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'accounts',
     'home',
     'tracker',
-    
 ]
 
 MIDDLEWARE = [
@@ -60,7 +59,12 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'templates',
+            BASE_DIR / 'accounts' / 'templates',
+            BASE_DIR / 'home' / 'templates',
+            BASE_DIR / 'tracker' / 'templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,12 +125,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-# mysite/settings.py
-
-from pathlib import Path
-
-
-# Static file settings
 STATIC_URL = 'static/'
 
 # Directories where static files are stored
@@ -140,8 +138,10 @@ STATICFILES_DIRS = [
 # For production (collect static files here)
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Login URL for @login_required decorator
+LOGIN_URL = 'login'

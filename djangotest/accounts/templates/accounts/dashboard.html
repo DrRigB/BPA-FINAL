@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Health Hive</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'accounts/dashboard.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <img src="{% static 'home/HEALTH_HIVE__2.png' %}" alt="Health Hive Logo" class="logo-img">
+            <div class="nav-links">
+                <a href="{% url 'activity_list' %}">Fitness Tracker</a>
+                <a href="#reminders">Reminders</a>
+                <span class="username">Welcome, {{ user.username }}!</span>
+                <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <main class="dashboard-content">
+            <div class="dashboard-grid">
+                <!-- First Row -->
+                <div class="dashboard-card stats-card">
+                    <h3>Quick Stats</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-value">{{ activities_count }}</span>
+                            <span class="stat-label">Total Activities</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">{{ total_calories }}</span>
+                            <span class="stat-label">Calories Burned</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">{{ avg_heart_rate }}</span>
+                            <span class="stat-label">Avg Heart Rate (bpm)</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">{{ total_duration }}</span>
+                            <span class="stat-label">Total Minutes</span>
+                        </div>
+                    </div>
+                    <a href="{% url 'activity_list' %}" class="card-link">View All Activities</a>
+                </div>
+
+                <!-- Teams Card -->
+                <div class="dashboard-card teams-card">
+                    <div class="card-header">
+                        <h3>Your Teams</h3>
+                        <a href="#" class="create-team-btn">+ Create Team</a>
+                    </div>
+                    <div class="team-card active">
+                        <div class="team-info">
+                            <h4>Development Team</h4>
+                            <p>5 members</p>
+                        </div>
+                        <div class="team-stats">
+                            <div class="stat">
+                                <span class="stat-value">1,250</span>
+                                <span class="stat-label">Total Calories</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">8</span>
+                                <span class="stat-label">Activities</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Second Row -->
+                <div class="dashboard-card">
+                    <h3>Calories Burned Over Time</h3>
+                    <canvas id="caloriesChart"></canvas>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>Recent Activities</h3>
+                    <ul class="recent-activities-list">
+                        {% for activity in recent_activities %}
+                        <li class="activity-item">
+                            <div class="activity-header">
+                                <span class="activity-name">{{ activity.name }}</span>
+                                <span class="activity-date">{{ activity.date|date:"M d, Y" }}</span>
+                            </div>
+                            <div class="activity-details">
+                                <span>Calories: {{ activity.calories_burned }}</span>
+                                <span>Duration: {{ activity.duration_minutes }}min</span>
+                            </div>
+                        </li>
+                        {% empty %}
+                        <li>No activities recorded yet</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Third Row -->
+                <div class="dashboard-card chart-container">
+                    <h3>Activity Distribution</h3>
+                    <div class="pie-chart-wrapper">
+                        <canvas id="activityPieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Parse the Django template variables
+            const chartData = {
+                dates: JSON.parse('{{ dates|safe }}'),
+                calories: JSON.parse('{{ calories_data|safe }}'),
+                types: JSON.parse('{{ activity_types|safe }}'),
+                counts: JSON.parse('{{ activity_counts|safe }}')
+            };
+
+            // Create Calories Chart
+            if (chartData.dates.length > 0) {
+                const caloriesChart = new Chart(
+                    document.getElementById('caloriesChart').getContext('2d'),
+                    {
+                        type: 'line',
+                        data: {
+                            labels: chartData.dates,
+                            datasets: [{
+                                label: 'Calories Burned',
+                                data: chartData.calories,
+                                borderColor: '#FF5722',
+                                tension: 0.1,
+                                fill: false
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Calories'
+                                    }
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Date'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                );
+            }
+
+            // Create Activity Distribution Chart
+            if (chartData.types.length > 0) {
+                const pieChart = new Chart(
+                    document.getElementById('activityPieChart').getContext('2d'),
+                    {
+                        type: 'pie',
+                        data: {
+                            labels: chartData.types,
+                            datasets: [{
+                                data: chartData.counts,
+                                backgroundColor: [
+                                    '#FF5722',
+                                    '#FF9800',
+                                    '#FFC107',
+                                    '#FFEB3B',
+                                    '#CDDC39'
+                                ]
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            aspectRatio: 1,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        boxWidth: 12,
+                                        padding: 15
+                                    }
+                                }
+                            }
+                        }
+                    }
+                );
+            }
+        });
+    </script>
+</body>
+</html>

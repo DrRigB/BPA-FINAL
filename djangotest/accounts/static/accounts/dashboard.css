@@ -1,0 +1,244 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+}
+
+header {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo-img {
+    height: 50px;
+    width: auto;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+}
+
+.logout-btn {
+    background-color: #FF5722;
+    color: white !important;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+/* Dashboard Cards */
+.dashboard-card {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Stats Card */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.stat-item .stat-value {
+    display: block;
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #FF5722;
+    margin-bottom: 0.5rem;
+}
+
+.stat-item .stat-label {
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* Teams Card */
+.teams-card {
+    background-color: white;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.create-team-btn {
+    padding: 0.5rem 1rem;
+    background-color: #f8f9fa;
+    color: #FF5722;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+    transition: all 0.2s ease;
+}
+
+.create-team-btn:hover {
+    background-color: #FF5722;
+    color: white;
+}
+
+.team-card {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 1.5rem;
+    border-left: 4px solid #FF5722;
+}
+
+.team-info {
+    margin-bottom: 1rem;
+}
+
+.team-info h4 {
+    color: #FF5722;
+    margin: 0 0 0.5rem 0;
+}
+
+.team-info p {
+    color: #666;
+    margin: 0;
+    font-size: 0.9em;
+}
+
+.team-stats {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+
+.team-stats .stat-value {
+    display: block;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #FF5722;
+    margin-bottom: 0.3rem;
+}
+
+.team-stats .stat-label {
+    font-size: 0.8em;
+    color: #666;
+}
+
+/* Chart Containers */
+.chart-container {
+    position: relative;
+}
+
+.pie-chart-wrapper {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    aspect-ratio: 1;
+}
+
+/* Recent Activities List */
+.recent-activities-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.activity-item {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.activity-name {
+    font-weight: bold;
+    color: #FF5722;
+}
+
+.activity-date {
+    color: #666;
+}
+
+.activity-details {
+    display: flex;
+    gap: 1rem;
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* Card Headers */
+.dashboard-card h3 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+/* Links */
+.card-link {
+    display: inline-block;
+    color: #FF5722;
+    text-decoration: none;
+    margin-top: 1rem;
+}
+
+.card-link:hover {
+    text-decoration: underline;
+}
+
+/* Username */
+.username {
+    font-weight: bold;
+    color: #FF5722;
+}
+
+/* Charts */
+canvas {
+    max-width: 100%;
+    height: auto !important;
+} 

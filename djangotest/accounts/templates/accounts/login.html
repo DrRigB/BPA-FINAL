@@ -3,26 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Health Hive</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Login to HealthHive - Your Health Tracking Platform">
+    <meta name="theme-color" content="#FF5722">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline';">
+    <title>Login | HealthHive</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'accounts/login.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/styles.css' %}" as="style">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Login to Health Hive</h2>
-        <form method="POST">
+    <div class="container">
+        <h1>Login to HealthHive</h1>
+        <form class="login-form" method="POST" autocomplete="off" novalidate>
             {% csrf_token %}
-            <div class="input-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
+            {% if error_message %}
+            <p class="error" role="alert">{{ error_message }}</p>
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required 
+                       autocomplete="username" spellcheck="false"
+                       aria-required="true">
             </div>
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required
+                       autocomplete="current-password"
+                       aria-required="true">
             </div>
-            <button type="submit" class="login-button">Login</button>
+
+            <button type="submit" class="submit-btn">Login</button>
         </form>
-        <p class="signup-link">Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
+        <p class="signup-link">Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
     </div>
 </body>
 </html>

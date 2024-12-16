@@ -1,66 +1,60 @@
 from django.db import models
-<<<<<<< HEAD
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.core.exceptions import ValidationError
-
-EXERCISE_CATEGORIES = [
-    ('cardio', 'Cardio'),
-    ('weightlifting', 'Weightlifting'),
-]
-
-CARDIO_TYPES = [
-    ('running', 'Running'),
-    ('cycling', 'Cycling'),
-    ('swimming', 'Swimming'),
-    ('walking', 'Walking'),
-    ('hiit', 'HIIT'),
-]
-
-WEIGHTLIFTING_TYPES = [
-    ('chest', 'Chest'),
-    ('back', 'Back'),
-    ('legs', 'Legs'),
-    ('shoulders', 'Shoulders'),
-    ('arms', 'Arms'),
-    ('core', 'Core'),
-]
-=======
-from django.contrib.auth.models import AbstractUser
->>>>>>> f7f00633833f7e38d20de64a58560927c0dc9e04
+from django.conf import settings
+from django.core.cache import cache
 
 class Activity(models.Model):
-    name = models.CharField(max_length=255, default="Exercise")
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='activities',
+        verbose_name='User'
+    )
+    name = models.CharField(max_length=255, default="Exercise", db_index=True)
     duration_minutes = models.IntegerField(
         help_text="Duration of the activity in minutes",
         validators=[
-            MinValueValidator(1, message="Duration must be at least 1 minute"),
+            MinValueValidator(1, message="N/A, please try again"),
             MaxValueValidator(300, message="Please limit exercise to 5 hours per session")
         ]
     )
     heart_rate = models.IntegerField(
         help_text="Average heart rate during the exercise",
         validators=[
-            MinValueValidator(40, message="Heart rate seems too low"),
-            MaxValueValidator(220, message="Heart rate seems too high")
+            MinValueValidator(40, message="N/A, please try again"),
+            MaxValueValidator(220, message="N/A, please try again")
         ]
     )
-    calories_burned = models.IntegerField(blank=True, null=True)
-    date = models.DateTimeField(auto_now_add=True)
+    calories_burned = models.IntegerField(blank=True, null=True, db_index=True)
+    date = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['date', 'name']),
+            models.Index(fields=['calories_burned', 'date']),
+            models.Index(fields=['user', 'date']),
+        ]
+        ordering = ['-date']
+        verbose_name = 'Activity'
+        verbose_name_plural = 'Activities'
 
     def calculate_calories_burned(self):
-<<<<<<< HEAD
+        cache_key = f'calories_burned_{self.id}'
+        cached_value = cache.get(cache_key)
+        
+        if cached_value is not None:
+            return cached_value
+            
         factor = 0.063
-=======
-        # Simple formula for calories burned: calories = duration * heart_rate * factor
-        factor = 0.063  # A general factor for calorie estimation
->>>>>>> f7f00633833f7e38d20de64a58560927c0dc9e04
-        self.calories_burned = int(self.duration_minutes * self.heart_rate * factor)
-        return self.calories_burned
+        calories = int(self.duration_minutes * self.heart_rate * factor)
+        cache.set(cache_key, calories, timeout=3600)
+        return calories
 
     def save(self, *args, **kwargs):
-        self.calculate_calories_burned()
+        if not self.calories_burned:
+            self.calories_burned = self.calculate_calories_burned()
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.name} - {self.date}"
+        return f"{self.user.username} - {self.name} - {self.date}"
 

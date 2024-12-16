@@ -20,5 +20,10 @@ class CustomUser(AbstractUser):
         verbose_name='user permissions',
     )
 
+    class Meta:
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
+        ordering = ['-date_joined']
+
     def __str__(self):
         return self.username
