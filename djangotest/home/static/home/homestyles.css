@@ -17,11 +17,20 @@ header {
     background-color: #fff;
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.logo h1 {
-    color: #FF5722; /* Orange color */
-    text-align: center;
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    width: 120px; /* Shrink the logo */
+    height: auto;
+    margin-right: 10px;
 }
 
 nav ul {
