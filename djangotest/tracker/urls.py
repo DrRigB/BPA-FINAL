@@ -4,4 +4,5 @@ from . import views
 urlpatterns = [
     path('activities/', views.activity_list, name='activity_list'),  # List of activities
     path('tracker/', views.track_activity, name='tracker'),  # Activity tracker form
+    path('delete/<int:pk>/', views.delete_activity, name='delete_activity'),
 ]

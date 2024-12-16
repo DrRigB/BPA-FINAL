@@ -1,16 +1,14 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Activity Tracker</title>
     <link rel="stylesheet" href="{% static 'tracker/trackerstyles.css' %}">
 </head>
 <body>
     <div class="container">
         <h1>Activity Tracker</h1>
-
+        
         <div class="form-section">
             <h2>Add New Activity</h2>
             <form method="POST" action="{% url 'tracker' %}">
@@ -21,19 +19,23 @@
         </div>
 
         <div class="activity-list">
-            <h2>Tracked Activities</h2>
+            <h2>Recent Activities</h2>
             {% for activity in activities %}
             <div class="activity-card">
-                <div class="activity-title">{{ activity.name }}</div>
+                <div class="activity-title">
+                    {{ activity.name }}
+                    <form action="{% url 'delete_activity' activity.id %}" method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-button">&times;</button>
+                    </form>
+                </div>
                 <div class="activity-details">
-                    <p><strong>Date:</strong> {{ activity.date }}</p>
-                    <p><strong>Duration:</strong> {{ activity.duration_minutes }} minutes</p>
-                    <p><strong>Heart Rate:</strong> {{ activity.heart_rate }} bpm</p>
-                    <p><strong>Calories Burned:</strong> {{ activity.calories_burned }}</p>
+                    <p>Duration: {{ activity.duration_minutes }} minutes</p>
+                    <p>Heart Rate: {{ activity.heart_rate }} bpm</p>
+                    <p>Calories Burned: {{ activity.calories_burned }}</p>
+                    <p>Date: {{ activity.date }}</p>
                 </div>
             </div>
-            {% empty %}
-            <p>No activities recorded yet.</p>
             {% endfor %}
         </div>
     </div>
