@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'tracker/trackerstyles.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -24,10 +29,11 @@
             {% for activity in activities %}
             <div class="service">
                 <h3>{{ activity.name }}</h3>
-                <p>Duration: {{ activity.duration_minutes }} minutes</p>
-                <p>Heart Rate: {{ activity.heart_rate }} bpm</p>
-                <p>Calories Burned: {{ activity.calories_burned }}</p>
-                <p>Date: {{ activity.date|date:"F j, Y, g:i a" }}</p>
+                <div class="activity-details">
+                    <p><strong>Duration:</strong> {{ activity.duration_minutes }} minutes</p>
+                    <p><strong>Heart Rate:</strong> {{ activity.heart_rate }} bpm</p>
+                    <p><strong>Date:</strong> {{ activity.date|date:"F j, Y, g:i a" }}</p>
+                </div>
                 <div class="activity-actions">
                     <a href="{% url 'edit_activity' activity.pk %}" class="btn btn-secondary">Edit</a>
                     <a href="{% url 'delete_activity' activity.pk %}" class="btn btn-danger">Delete</a>
@@ -35,10 +41,10 @@
             </div>
             {% endfor %}
         {% else %}
-            <div class="service">
-                <h3>No Activities Yet</h3>
-                <p>Start tracking your fitness journey by adding your first activity!</p>
-            </div>
+        <div class="service">
+            <h3>No Activities Yet</h3>
+            <p>Start tracking your fitness journey by adding your first activity!</p>
+        </div>
         {% endif %}
     </div>
 </div>

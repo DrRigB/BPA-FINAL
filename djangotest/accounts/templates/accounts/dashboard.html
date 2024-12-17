@@ -13,10 +13,12 @@
         <nav>
             <img src="{% static 'home/HEALTH_HIVE__2.png' %}" alt="Health Hive Logo" class="logo-img">
             <div class="nav-links">
-                <a href="{% url 'activity_list' %}">Fitness Tracker</a>
-                <a href="#reminders">Reminders</a>
+                <a href="{% url 'dashboard' %}" class="nav-link active">Dashboard</a>
+                <a href="{% url 'activity_list' %}" class="nav-link">Activity Tracker</a>
+                <a href="{% url 'reminder_list' %}" class="nav-link">Reminders</a>
                 <span class="username">Welcome, {{ user.username }}!</span>
                 <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+                <div class="nav-indicator"></div>
             </div>
         </nav>
     </header>
@@ -69,6 +71,32 @@
                                 <span class="stat-label">Activities</span>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Reminders Card -->
+                <div class="dashboard-card reminders-card">
+                    <div class="card-header">
+                        <h3>Recent Reminders</h3>
+                        <a href="{% url 'add_reminder' %}" class="create-reminder-btn">+ Add Reminder</a>
+                    </div>
+                    <div class="reminders-preview">
+                        {% for reminder in recent_reminders %}
+                        <div class="reminder-item {% if reminder.is_completed %}completed{% endif %}">
+                            <div class="reminder-info">
+                                <h4>{{ reminder.title }}</h4>
+                                <p>{{ reminder.time|time:"g:i A" }} - {{ reminder.get_frequency_display }}</p>
+                            </div>
+                            <form method="post" action="{% url 'toggle_reminder' reminder.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="toggle-status-btn">
+                                    {% if reminder.is_completed %}✓{% else %}○{% endif %}
+                                </button>
+                            </form>
+                        </div>
+                        {% empty %}
+                        <p class="no-data">No reminders set. Add one to get started!</p>
+                        {% endfor %}
                     </div>
                 </div>
 

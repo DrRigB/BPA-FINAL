@@ -37,12 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts',
     'home',
     'tracker',
+    'reminders',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -64,6 +67,7 @@ TEMPLATES = [
             BASE_DIR / 'accounts' / 'templates',
             BASE_DIR / 'home' / 'templates',
             BASE_DIR / 'tracker' / 'templates',
+            BASE_DIR / 'reminders' / 'templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -129,10 +133,10 @@ STATIC_URL = 'static/'
 
 # Directories where static files are stored
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Global static files
-    BASE_DIR / "accounts" / "static",  # Accounts app static
-    BASE_DIR / "home" / "static",      # Home app static
-    BASE_DIR / "tracker" / "static",   # Tracker app static
+    BASE_DIR / "static",
+    BASE_DIR / "home" / "static",
+    BASE_DIR / "tracker" / "static",
+    BASE_DIR / "accounts" / "static",
 ]
 
 # For production (collect static files here)

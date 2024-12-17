@@ -22,4 +22,5 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('', include('home.urls')),  # This links the homepage view to the root URL
     path('tracker/', include('tracker.urls')),  # Include tracker app URLs
+    path('reminders/', include('reminders.urls')),
 ]

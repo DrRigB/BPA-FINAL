@@ -5,29 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Health Hive{% endblock %}</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'home/homestyles.css' %}">
-    <link rel="stylesheet" href="{% static 'tracker/styles.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/dashboard.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     <header>
         <nav>
-            <div class="logo">
-                <a href="{% url 'homepage' %}">
-                    <img src="{% static 'home/HEALTH_HIVE__2.png' %}" alt="Health Hive Logo" class="logo-img">
-                </a>
-            </div>
+            <img src="{% static 'home/HEALTH_HIVE__2.png' %}" alt="Health Hive Logo" class="logo-img">
             <div class="nav-links">
-                {% if user.is_authenticated %}
-                    <a href="{% url 'dashboard' %}">Dashboard</a>
-                    <a href="{% url 'activity_list' %}">Activity Tracker</a>
-                    <span class="username">Welcome, {{ user.username }}!</span>
-                    <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
-                {% else %}
-                    <a href="{% url 'login' %}">Login</a>
-                    <a href="{% url 'signup' %}">Sign Up</a>
-                {% endif %}
+                <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Dashboard</a>
+                <a href="{% url 'activity_list' %}" class="nav-link {% if request.resolver_match.url_name == 'activity_list' %}active{% endif %}">Activity Tracker</a>
+                <a href="{% url 'reminder_list' %}" class="nav-link {% if request.resolver_match.url_name == 'reminder_list' %}active{% endif %}">Reminders</a>
+                <div class="nav-indicator"></div>
+                <span class="username">Welcome, {{ user.username }}!</span>
+                <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
             </div>
         </nav>
     </header>
@@ -42,5 +33,43 @@
     </footer>
 
     {% block extra_js %}{% endblock %}
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const indicator = document.querySelector('.nav-indicator');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const activeLink = document.querySelector('.nav-link.active');
+
+        function updateIndicator(element) {
+            const rect = element.getBoundingClientRect();
+            const parentRect = element.parentElement.getBoundingClientRect();
+            indicator.style.width = `${rect.width}px`;
+            indicator.style.transform = `translateX(${rect.left - parentRect.left}px)`;
+            indicator.style.opacity = '1';
+        }
+
+        // Set initial position
+        if (activeLink) {
+            updateIndicator(activeLink);
+        }
+
+        // Add hover effects
+        navLinks.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                updateIndicator(link);
+            });
+        });
+
+        // Return to active link position when leaving any link
+        const navLinksContainer = document.querySelector('.nav-links');
+        navLinksContainer.addEventListener('mouseleave', () => {
+            if (activeLink) {
+                updateIndicator(activeLink);
+            } else {
+                indicator.style.opacity = '0';
+            }
+        });
+    });
+    </script>
 </body>
 </html> 

@@ -15,13 +15,12 @@ body {
 }
 
 .container {
-    background-color: white;
-    padding: 40px; /* Increased padding for more space */
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
     max-width: 400px;
-    margin: 0 auto; /* Ensures it's centered */
+    margin: 50px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
@@ -33,47 +32,61 @@ h1 {
 .signup-form {
     display: flex;
     flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 label {
-    margin: 12px 0; /* Increased margin between labels and inputs */
-    font-size: 16px; /* Increased label font size */
+    font-weight: bold;
+    color: #333;
 }
 
 input {
-    padding: 12px; /* Increased padding for a more spacious feel */
-    margin-bottom: 20px; /* Increased margin between input fields */
+    padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 18px; /* Increased font size for inputs */
+    font-size: 16px;
 }
 
-button {
-    padding: 14px; /* Increased padding for the button */
-    background-color: #FF5722; /* Orange color */
+.submit-btn {
+    background-color: #FF5722;
     color: white;
-    font-size: 18px; /* Slightly larger font size for the button */
+    padding: 10px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 16px;
 }
 
-button:hover {
-    background-color: #FF7043; /* Lighter orange on hover */
+.submit-btn:hover {
+    background-color: #F4511E;
 }
 
-/* Add some extra spacing at the bottom */
-.signup-link {
+.error {
+    color: red;
+    margin-bottom: 15px;
+}
+
+.password-hint {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.login-link {
+    margin-top: 15px;
     text-align: center;
-    font-size: 16px; /* Slightly larger font for readability */
-    margin-top: 20px; /* Added more space on top */
 }
 
-.signup-link a {
+a {
     color: #FF5722;
     text-decoration: none;
 }
 
-.signup-link a:hover {
+a:hover {
     text-decoration: underline;
 }

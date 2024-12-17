@@ -19,6 +19,8 @@ nav {
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
+    padding-bottom: 1rem;
+    position: relative;
 }
 
 .logo-img {
@@ -30,18 +32,45 @@ nav {
     display: flex;
     gap: 2rem;
     align-items: center;
+    position: relative;
+    padding-bottom: 1rem;
 }
 
-.nav-links a {
+.nav-link {
     text-decoration: none;
+    color: #333;
+    padding: 0.5rem 1rem;
+    position: relative;
+    transition: color 0.3s;
+    white-space: nowrap;
+}
+
+.nav-indicator {
+    position: absolute;
+    bottom: 0;
+    height: 3px;
+    background-color: #FF5722;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    pointer-events: none;
+    transform-origin: left;
+}
+
+.nav-link:hover {
+    color: #333;
+}
+
+.nav-link.active {
     color: #333;
 }
 
 .logout-btn {
+    margin-left: 1rem;
     background-color: #FF5722;
-    color: white !important;
+    color: white;
     padding: 0.5rem 1rem;
     border-radius: 4px;
+    text-decoration: none;
 }
 
 /* Dashboard Container */
@@ -64,6 +93,8 @@ nav {
     padding: 1.5rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
 }
 
 /* Stats Card */
@@ -104,6 +135,8 @@ nav {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
 }
 
 .create-team-btn {
@@ -217,6 +250,34 @@ nav {
     color: #333;
     margin-top: 0;
     margin-bottom: 1.5rem;
+    position: relative;
+    display: inline-block;
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+}
+
+.dashboard-card h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 3px;
+    background-color: #FF5722;
+    transform-origin: left;
+    will-change: transform;
+    animation: slideIn 0.5s ease forwards;
+}
+
+@keyframes slideIn {
+    from {
+        width: 0;
+        transform: scaleX(0);
+    }
+    to {
+        width: 100%;
+        transform: scaleX(1);
+    }
 }
 
 /* Links */
@@ -233,12 +294,164 @@ nav {
 
 /* Username */
 .username {
-    font-weight: bold;
+    margin-left: 2rem;
     color: #FF5722;
+    font-weight: bold;
 }
 
 /* Charts */
 canvas {
     max-width: 100%;
     height: auto !important;
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.action-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.action-card h3 {
+    color: #FF5722;
+    margin-bottom: 10px;
+}
+
+.action-card p {
+    color: #666;
+}
+
+/* Reminders Card Styles */
+.reminders-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.create-reminder-btn {
+    padding: 0.5rem 1rem;
+    background-color: #f8f9fa;
+    color: #FF5722;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.create-reminder-btn:hover {
+    background-color: #FF5722;
+    color: white;
+}
+
+.reminders-preview {
+    margin-top: 1rem;
+}
+
+.reminder-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.3s;
+}
+
+.reminder-item:last-child {
+    border-bottom: none;
+}
+
+.reminder-item.completed {
+    background-color: #E8F5E9;
+}
+
+.reminder-info h4 {
+    margin: 0;
+    color: #333;
+    font-size: 1rem;
+}
+
+.reminder-info p {
+    margin: 0.25rem 0 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.toggle-status-btn {
+    background: none;
+    border: 2px solid #FF5722;
+    color: #FF5722;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    padding: 0;
+    transition: all 0.3s;
+}
+
+.toggle-status-btn:hover {
+    background-color: #FF5722;
+    color: white;
+}
+
+.completed .toggle-status-btn {
+    background-color: #FF5722;
+    color: white;
+}
+
+/* Stats card title */
+.stats-card h3::after {
+    animation-delay: 0.1s;
+}
+
+/* Teams card title */
+.teams-card h3::after {
+    animation-delay: 0.2s;
+}
+
+/* Reminders card title */
+.reminders-card h3::after {
+    animation-delay: 0.3s;
+}
+
+/* Charts card titles */
+.dashboard-card:nth-child(4) h3::after {
+    animation-delay: 0.4s;
+}
+
+.dashboard-card:nth-child(5) h3::after {
+    animation-delay: 0.5s;
+}
+
+/* Make sure headers have proper spacing */
+.card-header {
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header h3 {
+    margin: 0;
+    padding-bottom: 8px;
+}
+
+/* Prevent any unwanted movement */
+.dashboard-card {
+    overflow: hidden;
 } 
