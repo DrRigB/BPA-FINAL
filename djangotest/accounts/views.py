@@ -118,3 +118,6 @@ def dashboard(request):
         })
     
     return render(request, 'accounts/dashboard.html', context)
+
+def team_dashboard(request):
+    return render(request, 'accounts/team_dashboard.html')

@@ -13,12 +13,12 @@
         <nav>
             <img src="{% static 'home/HEALTH_HIVE__2.png' %}" alt="Health Hive Logo" class="logo-img">
             <div class="nav-links">
-                <a href="{% url 'dashboard' %}" class="nav-link active">Dashboard</a>
-                <a href="{% url 'activity_list' %}" class="nav-link">Activity Tracker</a>
-                <a href="{% url 'reminder_list' %}" class="nav-link">Reminders</a>
+                <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Dashboard</a>
+                <a href="{% url 'activity_list' %}" class="nav-link {% if request.resolver_match.url_name == 'activity_list' %}active{% endif %}">Activity Tracker</a>
+                <a href="{% url 'reminder_list' %}" class="nav-link {% if request.resolver_match.url_name == 'reminder_list' %}active{% endif %}">Reminders</a>
+                <div class="nav-indicator"></div>
                 <span class="username">Welcome, {{ user.username }}!</span>
                 <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
-                <div class="nav-indicator"></div>
             </div>
         </nav>
     </header>
@@ -54,23 +54,24 @@
                 <div class="dashboard-card teams-card">
                     <div class="card-header">
                         <h3>Your Teams</h3>
-                        <a href="#" class="create-team-btn">+ Create Team</a>
+                        <div class="team-buttons">
+                            <button class="join-team-btn">Join Team</button>
+                            <button class="create-team-btn">+ Create Team</button>
+                        </div>
                     </div>
                     <div class="team-card active">
-                        <div class="team-info">
-                            <h4>Development Team</h4>
-                            <p>5 members</p>
-                        </div>
-                        <div class="team-stats">
-                            <div class="stat">
-                                <span class="stat-value">1,250</span>
-                                <span class="stat-label">Total Calories</span>
+                        <a href="{% url 'team_dashboard' %}" class="team-link">
+                            <div class="team-info">
+                                <h4>Development Team</h4>
+                                <p>4 members</p>
                             </div>
-                            <div class="stat">
-                                <span class="stat-value">8</span>
-                                <span class="stat-label">Activities</span>
+                            <div class="team-stats">
+                                <div class="stat">
+                                    <span class="stat-value">1,250</span>
+                                    <span class="stat-label">Total Calories</span>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
 
@@ -256,6 +257,158 @@
                     updateIndicator(activeLink);
                 } else {
                     indicator.style.opacity = '0';
+                }
+            });
+        });
+    </script>
+
+    <div class="modal-overlay" id="createTeamModal">
+        <div class="modal-content">
+            <h3>Create New Team</h3>
+            <form id="createTeamForm">
+                <div class="form-group">
+                    <label for="teamName">Team Name*</label>
+                    <input type="text" id="teamName" required>
+                </div>
+                <div class="form-group">
+                    <label for="organization">Organization</label>
+                    <input type="text" id="organization">
+                </div>
+                <div class="form-group">
+                    <label for="teamLeader">Team Leader*</label>
+                    <input type="text" id="teamLeader" value="{{ user.username }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="teamDescription">Team Description</label>
+                    <textarea id="teamDescription" rows="3"></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="submit-btn">Create Team</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="teamCodeModal">
+        <div class="modal-content">
+            <h3>Team Created Successfully!</h3>
+            <p>Share this code with your team members:</p>
+            <div class="team-code">
+                <span id="generatedCode">ABC123</span>
+                <button id="copyCode" class="copy-btn">Copy</button>
+            </div>
+            <div class="modal-buttons">
+                <button class="submit-btn" onclick="closeAllModals()">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="joinTeamModal">
+        <div class="modal-content">
+            <h3>Join a Team</h3>
+            <form id="joinTeamForm">
+                <div class="form-group">
+                    <label for="teamCode">Enter Team Code*</label>
+                    <input type="text" id="teamCode" required maxlength="6" placeholder="Enter 6-digit code">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="submit-btn">Join Team</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Wait for the DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Script loaded'); // Debug line
+
+            // Get button elements
+            const createTeamBtn = document.querySelector('.create-team-btn');
+            const joinTeamBtn = document.querySelector('.join-team-btn');
+            const createTeamModal = document.getElementById('createTeamModal');
+            const joinTeamModal = document.getElementById('joinTeamModal');
+            const teamCodeModal = document.getElementById('teamCodeModal');
+            const cancelBtns = document.querySelectorAll('.cancel-btn');
+
+            console.log('Create Team Button:', createTeamBtn); // Debug line
+            console.log('Join Team Button:', joinTeamBtn); // Debug line
+
+            // Function to generate random team code
+            function generateTeamCode() {
+                return Math.random().toString(36).substring(2, 8).toUpperCase();
+            }
+
+            // Function to show modal
+            function showModal(modal) {
+                if (modal) {
+                    modal.style.display = 'flex';
+                    console.log('Showing modal'); // Debug line
+                }
+            }
+
+            // Function to close all modals
+            function closeAllModals() {
+                [createTeamModal, joinTeamModal, teamCodeModal].forEach(modal => {
+                    if (modal) modal.style.display = 'none';
+                });
+                console.log('Closing modals'); // Debug line
+            }
+
+            // Add click listeners to buttons
+            if (createTeamBtn) {
+                createTeamBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('Create team clicked'); // Debug line
+                    showModal(createTeamModal);
+                });
+            }
+
+            if (joinTeamBtn) {
+                joinTeamBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('Join team clicked'); // Debug line
+                    showModal(joinTeamModal);
+                });
+            }
+
+            // Handle create team form submission
+            const createTeamForm = document.getElementById('createTeamForm');
+            if (createTeamForm) {
+                createTeamForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const code = generateTeamCode();
+                    const codeElement = document.getElementById('generatedCode');
+                    if (codeElement) codeElement.textContent = code;
+                    closeAllModals();
+                    showModal(teamCodeModal);
+                });
+            }
+
+            // Handle copy code button
+            const copyBtn = document.getElementById('copyCode');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', function() {
+                    const code = document.getElementById('generatedCode').textContent;
+                    navigator.clipboard.writeText(code);
+                    this.textContent = 'Copied!';
+                    setTimeout(() => this.textContent = 'Copy', 2000);
+                });
+            }
+
+            // Add click listeners to cancel buttons
+            cancelBtns.forEach(btn => {
+                btn.addEventListener('click', closeAllModals);
+            });
+
+            // Close modal when clicking outside
+            [createTeamModal, joinTeamModal, teamCodeModal].forEach(modal => {
+                if (modal) {
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) closeAllModals();
+                    });
                 }
             });
         });

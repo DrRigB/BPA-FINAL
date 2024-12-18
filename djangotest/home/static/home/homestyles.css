@@ -6,8 +6,8 @@
 }
 
 :root {
-    --primary-color: #FF5722;
-    --primary-hover: #FF7043;
+    --primary-color: #ff7c00;
+    --primary-hover: #ff9933;
     --text-color: #333;
     --bg-color: #f4f4f9;
     --white: #fff;
@@ -94,10 +94,40 @@ nav a:not(.cta-button)::after {
 
 /* Hero Section */
 .hero {
-    background-color: var(--primary-color);
-    color: var(--white);
+    position: relative;
+    background-color: #ff7c00;
+    color: white;
     padding: calc(var(--spacing-base) * 4) 0;
     text-align: center;
+    overflow: hidden;
+}
+
+.gradient-overlay {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        #ff7c00 0%, 
+        #FFC300 50%, 
+        #ff7c00 100%
+    );
+    animation: gradientSlide 4s infinite ease-in-out alternate;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes gradientSlide {
+    0% {
+        transform: translateX(-25%);
+    }
+    100% {
+        transform: translateX(25%);
+    }
 }
 
 .hero-content h2 {
@@ -112,7 +142,7 @@ nav a:not(.cta-button)::after {
 
 .hero .cta-button {
     background-color: white;
-    color: #FF5722;
+    color: #ff7c00;
     font-size: 1.2em;
     padding: 15px 30px;
     border-radius: 5px;
@@ -121,7 +151,7 @@ nav a:not(.cta-button)::after {
 }
 
 .hero .cta-button:hover {
-    background-color: #FF7043;
+    background-color: #ff9933;
 }
 
 /* Section Styling */
@@ -133,7 +163,7 @@ nav a:not(.cta-button)::after {
 
 .about h2, .services h2, .contact h2 {
     font-size: 2.5em;
-    color: #FF5722;
+    color: #ff7c00;
 }
 
 /* Services Section */
@@ -170,7 +200,7 @@ nav a:not(.cta-button)::after {
 
 .service h3 {
     font-size: 1.8em;
-    color: #FF5722;
+    color: #ff7c00;
     margin-bottom: 1rem;
 }
 
@@ -188,7 +218,7 @@ nav a:not(.cta-button)::after {
 
 .contact h2 {
     font-size: 2.5em;
-    color: #FF5722;
+    color: #ff7c00;
 }
 
 .contact p {
@@ -197,7 +227,7 @@ nav a:not(.cta-button)::after {
 }
 
 .contact a.cta-button {
-    background-color: #FF5722;
+    background-color: #ff7c00;
     color: white;
     font-size: 1.2em;
     padding: 15px 30px;
@@ -207,7 +237,7 @@ nav a:not(.cta-button)::after {
 }
 
 .contact a.cta-button:hover {
-    background-color: #FF7043;
+    background-color: #ff9933;
 }
 
 /* Footer Section */
@@ -357,5 +387,32 @@ button:focus {
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
+}
+
+/* Add these styles for the splash effect */
+.splash {
+    position: absolute;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(255,124,0,0.8) 0%, rgba(255,124,0,0) 70%);
+    border-radius: 50%;
+    animation: splash 0.6s ease-out forwards;
+    z-index: 1000;
+}
+
+@keyframes splash {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+/* Make buttons position relative to contain splash */
+.cta-button, .nav-link, .service {
+    position: relative;
+    overflow: hidden;
 }
 
