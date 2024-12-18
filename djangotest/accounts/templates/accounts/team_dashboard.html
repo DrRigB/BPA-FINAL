@@ -6,6 +6,191 @@
     <title>Development Team - Health Hive</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'accounts/dashboard.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .dashboard-container {
+            padding: 2rem;
+            height: calc(100vh - 200px);
+        }
+
+        .team-dashboard-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 100%;
+        }
+
+        .team-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            max-height: 700px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .team-header {
+            margin-bottom: 2rem;
+            flex-shrink: 0;
+        }
+
+        .team-header-stats {
+            display: flex;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .team-members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .member {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .member:hover {
+            background: #ff7c00;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .member.active {
+            background: #ff7c00;
+            color: white;
+        }
+
+        .member-details {
+            display: block;
+            height: 100%;
+        }
+
+        .member-details.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .team-dashboard-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-item .stat-value {
+            display: block;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #ff7c00;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .member-name {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: inherit;
+            margin-bottom: 0.5rem;
+        }
+
+        .member-role {
+            display: block;
+            font-size: 0.9rem;
+            color: inherit;
+            opacity: 0.8;
+        }
+
+        .activities-list {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .activity {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s ease;
+        }
+
+        .activity:hover {
+            transform: translateY(-2px);
+        }
+
+        .activity-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .activity-stats {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .member-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .nav-indicator {
+            position: absolute;
+            bottom: 0;
+            height: 3px;
+            background-color: #ff7c00;
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+
+        .nav-links {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: inherit;
+            text-decoration: none;
+            padding: 1rem 0;
+            position: relative;
+        }
+
+        .nav-link.active {
+            color: #ff7c00;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -24,46 +209,43 @@
 
     <div class="dashboard-container">
         <main class="team-dashboard-content">
-            <div class="team-header">
-                <h2 class="team-title">Development Team</h2>
-                <div class="team-header-stats">
-                    <div class="stat-item">
-                        <span class="stat-value">1,250</span>
-                        <span class="stat-label">Total Team Calories</span>
+            <div class="team-section">
+                <div class="team-header">
+                    <h2 class="team-title">Development Team</h2>
+                    <div class="team-header-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">1,250</span>
+                            <span class="stat-label">Total Team Calories</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">24</span>
+                            <span class="stat-label">Team Activities</span>
+                        </div>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-value">24</span>
-                        <span class="stat-label">Team Activities</span>
+                </div>
+                <div class="team-members-grid">
+                    <div class="member" data-member-id="1">
+                        <span class="member-name">Alyssa Emerson</span>
+                        <span class="member-role">Creative Designer</span>
+                    </div>
+                    <div class="member" data-member-id="2">
+                        <span class="member-name">Brant Simpson</span>
+                        <span class="member-role">AI Agent Designer</span>
+                    </div>
+                    <div class="member" data-member-id="3">
+                        <span class="member-name">Rigdon Windsor</span>
+                        <span class="member-role">Developer</span>
+                    </div>
+                    <div class="member" data-member-id="4">
+                        <span class="member-name">Carson Pugh</span>
+                        <span class="member-role">Developer</span>
                     </div>
                 </div>
             </div>
 
-            <div class="team-content-wrapper">
-                <div class="member-activities" id="memberActivities">
-                    <div class="no-member-selected">
-                        <p>Select a team member to view their activities</p>
-                    </div>
-                </div>
-                <div class="team-members-sidebar">
-                    <h3>Team Members</h3>
-                    <div class="members-list">
-                        <div class="member" data-member-id="1">
-                            <span class="member-name">Alyssa Emerson</span>
-                            <span class="member-role">Creative Designer</span>
-                        </div>
-                        <div class="member" data-member-id="2">
-                            <span class="member-name">Brant Simpson</span>
-                            <span class="member-role">AI Agent Designer</span>
-                        </div>
-                        <div class="member" data-member-id="3">
-                            <span class="member-name">Rigdon Windsor</span>
-                            <span class="member-role">Developer</span>
-                        </div>
-                        <div class="member" data-member-id="4">
-                            <span class="member-name">Carson Pugh</span>
-                            <span class="member-role">Developer</span>
-                        </div>
-                    </div>
+            <div class="team-section member-details" id="memberActivities">
+                <div class="no-member-selected">
+                    <p>Select a team member to view their activities</p>
                 </div>
             </div>
         </main>
@@ -72,12 +254,12 @@
     <script>
         document.querySelectorAll('.member').forEach(member => {
             member.addEventListener('click', function() {
-                // Remove active class from all members
                 document.querySelectorAll('.member').forEach(m => m.classList.remove('active'));
-                // Add active class to clicked member
                 this.classList.add('active');
                 
-                // Update activities view (mock data for now)
+                const memberDetails = document.querySelector('.member-details');
+                memberDetails.classList.add('active');
+                
                 const memberName = this.querySelector('.member-name').textContent;
                 const activitiesHtml = `
                     <h3>${memberName}'s Activities</h3>
@@ -100,10 +282,47 @@
                             <span class="activity-name">Evening Workout</span>
                             <span class="activity-stats">170 calories • 45 mins</span>
                         </div>
+                        <div class="activity">
+                            <span class="activity-name">Yoga Session</span>
+                            <span class="activity-stats">120 calories • 40 mins</span>
+                        </div>
                     </div>
                 `;
                 document.getElementById('memberActivities').innerHTML = activitiesHtml;
             });
+        });
+
+        const navLinks = document.querySelectorAll('.nav-link');
+        const navIndicator = document.querySelector('.nav-indicator');
+
+        function updateIndicator(link) {
+            navIndicator.style.width = `${link.offsetWidth}px`;
+            navIndicator.style.transform = `translateX(${link.offsetLeft}px)`;
+            navIndicator.style.opacity = '1';
+        }
+
+        // Set initial state
+        navLinks.forEach(link => {
+            // Check if the current URL matches the link's href
+            if (window.location.pathname === link.getAttribute('href')) {
+                updateIndicator(link);
+                link.classList.add('active');
+            }
+
+            // Add hover effects
+            link.addEventListener('mouseenter', () => {
+                updateIndicator(link);
+            });
+        });
+
+        // Reset indicator when mouse leaves the nav
+        document.querySelector('.nav-links').addEventListener('mouseleave', () => {
+            const activeLink = document.querySelector('.nav-link.active');
+            if (activeLink) {
+                updateIndicator(activeLink);
+            } else {
+                navIndicator.style.opacity = '0';
+            }
         });
     </script>
 </body>
