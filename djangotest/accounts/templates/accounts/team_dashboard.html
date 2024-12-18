@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Development Team - Health Hive</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'accounts/dashboard.css' %}">
+</head>
+<body>
+    <header>
+        <nav>
+            <img src="{% static 'home/HEALTH_HIVE__2.png' %}" alt="Health Hive Logo" class="logo-img">
+            <div class="nav-links">
+                <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+                <a href="{% url 'activity_list' %}" class="nav-link">Activity Tracker</a>
+                <a href="{% url 'reminder_list' %}" class="nav-link">Reminders</a>
+                <div class="nav-indicator"></div>
+                <span class="username">Welcome, {{ user.username }}!</span>
+                <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <main class="team-dashboard-content">
+            <div class="team-header">
+                <h2 class="team-title">Development Team</h2>
+                <div class="team-header-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">1,250</span>
+                        <span class="stat-label">Total Team Calories</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">24</span>
+                        <span class="stat-label">Team Activities</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-content-wrapper">
+                <div class="member-activities" id="memberActivities">
+                    <div class="no-member-selected">
+                        <p>Select a team member to view their activities</p>
+                    </div>
+                </div>
+                <div class="team-members-sidebar">
+                    <h3>Team Members</h3>
+                    <div class="members-list">
+                        <div class="member" data-member-id="1">
+                            <span class="member-name">Alyssa Emerson</span>
+                            <span class="member-role">Creative Designer</span>
+                        </div>
+                        <div class="member" data-member-id="2">
+                            <span class="member-name">Brant Simpson</span>
+                            <span class="member-role">AI Agent Designer</span>
+                        </div>
+                        <div class="member" data-member-id="3">
+                            <span class="member-name">Rigdon Windsor</span>
+                            <span class="member-role">Developer</span>
+                        </div>
+                        <div class="member" data-member-id="4">
+                            <span class="member-name">Carson Pugh</span>
+                            <span class="member-role">Developer</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.querySelectorAll('.member').forEach(member => {
+            member.addEventListener('click', function() {
+                // Remove active class from all members
+                document.querySelectorAll('.member').forEach(m => m.classList.remove('active'));
+                // Add active class to clicked member
+                this.classList.add('active');
+                
+                // Update activities view (mock data for now)
+                const memberName = this.querySelector('.member-name').textContent;
+                const activitiesHtml = `
+                    <h3>${memberName}'s Activities</h3>
+                    <div class="member-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">320</span>
+                            <span class="stat-label">Calories Burned</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">6</span>
+                            <span class="stat-label">Activities</span>
+                        </div>
+                    </div>
+                    <div class="activities-list">
+                        <div class="activity">
+                            <span class="activity-name">Morning Run</span>
+                            <span class="activity-stats">150 calories • 30 mins</span>
+                        </div>
+                        <div class="activity">
+                            <span class="activity-name">Evening Workout</span>
+                            <span class="activity-stats">170 calories • 45 mins</span>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('memberActivities').innerHTML = activitiesHtml;
+            });
+        });
+    </script>
+</body>
+</html> 
