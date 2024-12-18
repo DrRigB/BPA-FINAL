@@ -22,17 +22,57 @@
     </header>
 
     <section class="hero">
-        <div class="gradient-overlay"></div>
+        <div class="hero-background">
+            <div class="gradient-overlay"></div>
+        </div>
         <div class="hero-content">
-            <h2>Welcome to Health Hive</h2>
-            <p>Join our community and take the first step towards a healthier you!</p>
-            <a href="{% url 'signup' %}" class="cta-button">Get Started</a>
+            <h2>Transform Your Health Journey</h2>
+            <div class="hero-subcontent">
+                <div class="for-individuals">
+                    <h3>For Individuals</h3>
+                    <p>Track, remind, and achieve your personal health goals</p>
+                </div>
+                <div class="for-businesses">
+                    <h3>For Teams</h3>
+                    <p>Boost workplace wellness and team productivity</p>
+                </div>
+            </div>
+            <div class="cta-buttons">
+                <a href="{% url 'signup' %}" class="cta-button primary">Start Free Trial</a>
+                <a href="#features" class="cta-button secondary">Learn More</a>
+            </div>
         </div>
     </section>
 
     <section id="about" class="about">
         <h2>About Us</h2>
         <p>At Health Hive, we provide resources, support, and a community for individuals seeking to live a healthier life. From wellness tips to fitness advice, we're here to help you thrive!</p>
+    </section>
+
+    <section id="features" class="features">
+        <h2>Why Choose Health Hive?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Smart Analytics</h3>
+                <p>Get detailed insights into your health metrics and team performance with advanced analytics.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤝</div>
+                <h3>Team Collaboration</h3>
+                <p>Create wellness challenges, track team progress, and boost engagement through friendly competition.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⏰</div>
+                <h3>Smart Reminders</h3>
+                <p>Never miss a workout or health check with customizable notifications.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Cross-Platform</h3>
+                <p>Access your health data anywhere, anytime across all your devices.</p>
+            </div>
+        </div>
     </section>
 
     <section id="services" class="services">
