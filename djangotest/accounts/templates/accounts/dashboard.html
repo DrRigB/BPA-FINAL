@@ -224,5 +224,41 @@
             }
         });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const indicator = document.querySelector('.nav-indicator');
+            let activeLink = document.querySelector('.nav-link.active');
+
+            function updateIndicator(element) {
+                indicator.style.width = `${element.offsetWidth}px`;
+                indicator.style.transform = `translateX(${element.offsetLeft}px)`;
+                indicator.style.opacity = '1';
+            }
+
+            // Set initial position
+            if (activeLink) {
+                updateIndicator(activeLink);
+            }
+
+            // Handle hover events
+            navLinks.forEach(link => {
+                link.addEventListener('mouseenter', () => {
+                    updateIndicator(link);
+                });
+            });
+
+            // Return to active link position when leaving navigation area
+            const navLinksContainer = document.querySelector('.nav-links');
+            navLinksContainer.addEventListener('mouseleave', () => {
+                if (activeLink) {
+                    updateIndicator(activeLink);
+                } else {
+                    indicator.style.opacity = '0';
+                }
+            });
+        });
+    </script>
 </body>
 </html>

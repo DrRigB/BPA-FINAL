@@ -54,46 +54,42 @@ header {
     margin-right: 10px;
 }
 
-nav ul {
+nav {
     display: flex;
-    justify-content: center;
-    gap: 20px;
+    align-items: center;
+    gap: 2rem;
 }
 
 nav a {
     color: var(--text-color);
     font-size: 1.1em;
     text-decoration: none;
-    position: relative;
-    padding-bottom: 2px;
+    padding: var(--spacing-base) calc(var(--spacing-base) * 2);
+    border-radius: var(--border-radius);
+    transition: background-color var(--transition-speed) ease;
+}
+
+nav a:not(.cta-button) {
+    background-color: transparent;
+    border: 2px solid transparent;
+}
+
+nav a:not(.cta-button):hover {
+    background-color: rgba(255, 87, 34, 0.1);
 }
 
 nav a.cta-button {
     background-color: var(--primary-color);
     color: var(--white);
-    padding: var(--spacing-base) calc(var(--spacing-base) * 2);
-    border-radius: var(--border-radius);
-    transition: background-color var(--transition-speed) ease;
 }
 
 nav a.cta-button:hover {
     background-color: var(--primary-hover);
 }
 
-/* Add underline animation for nav links */
+/* Remove the old underline animation */
 nav a:not(.cta-button)::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: var(--primary-color);
-    transition: width 0.3s ease;
-}
-
-nav a:not(.cta-button):hover::after {
-    width: 100%;
+    display: none;
 }
 
 /* Hero Section */
@@ -143,23 +139,28 @@ nav a:not(.cta-button):hover::after {
 /* Services Section */
 .services {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
-    padding: 2rem;
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .service {
     width: 100%;
+    height: 100%;
     margin: 0;
     background-color: white;
-    padding: 20px;
+    padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
     transition: transform 0.2s, box-shadow 0.2s;
-    text-decoration: none; /* Remove underline for clickable box */
-    color: inherit; /* Inherit text color */
-    display: block; /* Make the entire box clickable */
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .service:hover {
@@ -170,6 +171,12 @@ nav a:not(.cta-button):hover::after {
 .service h3 {
     font-size: 1.8em;
     color: #FF5722;
+    margin-bottom: 1rem;
+}
+
+.service p {
+    font-size: 1.1em;
+    line-height: 1.5;
 }
 
 /* Contact Us Section */
