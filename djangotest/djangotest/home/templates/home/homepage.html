@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Hive - Your Wellness Hub</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'home/homestyles.css' %}">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{% static 'home/HEALTH_HIVE__2.png' %}" alt="Health Hive Logo" class="logo-img">
+        </div>
+        <nav>
+            <a href="#about">About</a>
+            <a href="#services">Services</a>
+            <a href="#contact">Contact</a>
+            <a href="{% url 'login' %}" class="cta-button">Login</a>
+            <a href="{% url 'signup' %}" class="cta-button">Sign Up</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-background">
+            <div class="gradient-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <h2>Transform Your Health Journey</h2>
+            <div class="hero-subcontent">
+                <div class="for-individuals">
+                    <h3>For Individuals</h3>
+                    <p>Track, remind, and achieve your personal health goals</p>
+                </div>
+                <div class="for-businesses">
+                    <h3>For Teams</h3>
+                    <p>Boost workplace wellness and team productivity</p>
+                </div>
+            </div>
+            <div class="cta-buttons">
+                <a href="{% url 'signup' %}" class="cta-button primary">Start Free Trial</a>
+                <a href="#features" class="cta-button secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <h2>About Us</h2>
+        <p>At Health Hive, we provide resources, support, and a community for individuals seeking to live a healthier life. From wellness tips to fitness advice, we're here to help you thrive!</p>
+    </section>
+
+    <section id="features" class="features">
+        <h2>Why Choose Health Hive?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Smart Analytics</h3>
+                <p>Get detailed insights into your health metrics and team performance with advanced analytics.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤝</div>
+                <h3>Team Collaboration</h3>
+                <p>Create wellness challenges, track team progress, and boost engagement through friendly competition.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⏰</div>
+                <h3>Smart Reminders</h3>
+                <p>Never miss a workout or health check with customizable notifications.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Cross-Platform</h3>
+                <p>Access your health data anywhere, anytime across all your devices.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="services">
+        <!-- Fitness Tracker box -->
+        <a href="{% url 'activity_list' %}" class="service">
+            <h3>Fitness Tracker</h3>
+            <p>Track your fitness activities and progress, ensuring you stay motivated and healthy. Monitor your engagement in wellness activities in real-time.</p>
+        </a>
+        <!-- Health Reminders box -->
+        <a href="{% url 'reminder_list' %}" class="service">
+            <h3>Health Reminders</h3>
+            <p>Set personalized reminders for water, meals, and physical activity. Stay on track with easy-to-use notifications.</p>
+        </a>
+        <!-- Wellness Reporting box -->
+        <div class="service">
+            <h3>Wellness Reporting</h3>
+            <p>Generate detailed reports showing your participation and progress in health activities. Get valuable insights to improve your wellness journey.</p>
+        </div>
+    </section>
+    
+    
+    <section id="contact" class="contact">
+        <h2>Contact Us</h2>
+        <p>Have questions? We'd love to hear from you. Reach out to us for more information.</p>
+        <a href="mailto:contact@healthhive.com" class="cta-button">Email Us</a>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Health Hive. All rights reserved.</p>
+    </footer>
+</body>
+</html>
