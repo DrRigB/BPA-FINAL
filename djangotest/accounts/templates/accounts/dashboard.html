@@ -134,6 +134,24 @@
                         <canvas id="activityPieChart"></canvas>
                     </div>
                 </div>
+
+                <!-- Add this inside the dashboard-grid div, after your existing cards -->
+                <div class="dashboard-card badges-preview">
+                    <div class="card-header">
+                        <h3>Recent Badges</h3>
+                        <a href="{% url 'badges' %}" class="view-all-btn">View All Badges</a>
+                    </div>
+                    <div class="badges-preview-grid">
+                        {% for badge in personal_badges|slice:":3" %}
+                        <div class="badge-card-small {% if badge.locked %}locked{% endif %}">
+                            <div class="badge-icon">
+                                {% if badge.locked %}🔒{% else %}🏆{% endif %}
+                            </div>
+                            <h4>{{ badge.name }}</h4>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </main>
     </div>

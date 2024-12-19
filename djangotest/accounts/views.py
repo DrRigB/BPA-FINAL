@@ -97,10 +97,23 @@ def dashboard(request):
             dates.insert(0, day.strftime('%b %d'))
             calories_data.insert(0, sum(a.calories_burned or 0 for a in day_activities))
         
-        # Activity distribution
-        activity_distribution = activities.values('name').annotate(count=Count('id'))
-        activity_types = [item['name'] for item in activity_distribution]
-        activity_counts = [item['count'] for item in activity_distribution]
+        # Activity distribution with case-insensitive grouping
+        activity_distribution = {}
+        for activity in activities:
+            activity_name = activity.name.lower().strip()
+            if activity_name in activity_distribution:
+                activity_distribution[activity_name] += 1
+            else:
+                activity_distribution[activity_name] = 1
+        
+        # Sort and capitalize activity names
+        sorted_distribution = sorted(
+            activity_distribution.items(), 
+            key=lambda x: x[1], 
+            reverse=True
+        )
+        activity_types = [name.capitalize() for name, _ in sorted_distribution]
+        activity_counts = [count for _, count in sorted_distribution]
         
         # Add chart data to context
         context.update({
@@ -120,7 +133,42 @@ def dashboard(request):
             'activity_counts': json.dumps([])
         })
     
+    personal_badges = [
+        {'name': 'First Activity', 'description': 'Complete your first activity', 'locked': False},
+        {'name': 'Early Bird', 'description': 'Complete 5 morning activities', 'locked': True},
+        {'name': 'Calorie Crusher', 'description': 'Burn 1000 calories total', 'locked': True},
+    ]
+    
+    context['personal_badges'] = personal_badges
+    
     return render(request, 'accounts/dashboard.html', context)
 
 def team_dashboard(request):
     return render(request, 'accounts/team_dashboard.html')
+
+@login_required
+def badges_view(request):
+    badge_type = request.GET.get('type', 'personal')
+    
+    personal_badges = [
+        {'name': 'First Activity', 'description': 'Complete your first activity', 'locked': False},
+        {'name': 'Early Bird', 'description': 'Complete 5 morning activities', 'locked': True},
+        {'name': 'Calorie Crusher', 'description': 'Burn 1000 calories total', 'locked': True},
+        {'name': 'Consistency King', 'description': 'Log activities for 7 days straight', 'locked': True},
+        {'name': 'Heart Health Hero', 'description': 'Maintain optimal heart rate in 10 activities', 'locked': True},
+    ]
+    
+    team_badges = [
+        {'name': 'Team Player', 'description': 'Join your first team', 'locked': True},
+        {'name': 'Team Leader', 'description': 'Lead your team to 5000 calories', 'locked': True},
+        {'name': 'Team Spirit', 'description': 'Complete 10 team activities', 'locked': True},
+        {'name': 'Team Champion', 'description': 'Win a team challenge', 'locked': True},
+    ]
+    
+    context = {
+        'badge_type': badge_type,
+        'personal_badges': personal_badges,
+        'team_badges': team_badges,
+    }
+    
+    return render(request, 'accounts/badges.html', context)
