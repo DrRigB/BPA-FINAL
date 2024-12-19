@@ -8,6 +8,9 @@ from datetime import timedelta
 from django.utils import timezone
 from tracker.models import Activity
 from reminders.models import Reminder
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.http import require_http_methods
 
 def signup(request):
     if request.method == 'POST':
