@@ -240,6 +240,10 @@ nav a:not(.cta-button)::after {
     margin-bottom: 15px;
 }
 
+.feature-card p {
+    color: #333;
+}
+
 @media (max-width: 768px) {
     .hero-subcontent {
         flex-direction: column;
