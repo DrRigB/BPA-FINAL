@@ -494,36 +494,43 @@
             }
 
             function handleUserMessage(message) {
-                const responses = {
-                    'activity': 'You can track your activities in the Activity Tracker! Click "Activity Tracker" in the navigation bar to log exercises, monitor progress, and view your fitness history.',
-                    'workout': 'Need to log a workout? Head to the Activity Tracker section where you can record your exercises, duration, and intensity. It\'s a great way to monitor your fitness journey!',
-                    'exercise': 'Track all your exercises in the Activity Tracker. You can log different types of workouts and see your progress over time.',
-                    'reminder': 'To set health reminders, click "Reminders" in the navigation bar. You can create reminders for:\n- Water intake\n- Medications\n- Exercise routines\n- And other health activities',
-                    'water': 'Stay hydrated! Set up water intake reminders in the Reminders section. Click "Reminders" in the navigation bar and create a new water reminder with your preferred schedule.',
-                    'medication': 'Never miss your medications! Set up med reminders in the Reminders section with custom schedules and notifications.',
-                    'team': 'Looking to join or create a team?\n- Create a new team to track group progress\n- Join existing teams\n- View team analytics\n- Collaborate on health goals\nCheck out the Teams section in your dashboard!',
-                    'analytics': 'View your progress in the Dashboard where you can see:\n- Activity history\n- Fitness metrics\n- Team progress\n- Health statistics',
-                    'dashboard': 'The Dashboard is your wellness hub! Here you can:\n- View your activity summary\n- Check team progress\n- Access quick links\n- See your health metrics',
-                    'progress': 'Track your progress through:\n- Activity history in the Activity Tracker\n- Dashboard analytics\n- Team performance metrics\n- Health goal achievements',
-                    'help': 'I can help you with:\n- Activity tracking\n- Setting reminders (water, meds, exercise)\n- Team features\n- Progress analytics\n- Dashboard navigation\n- General health advice\nWhat would you like to know more about?',
-                    'hello': 'Hi there! 👋 How can I help you with your health journey today?',
-                    'bye': 'Goodbye! Stay healthy and don\'t forget to check your reminders! 👋',
-                    'thank': 'You\'re welcome! Remember, I\'m always here to help you make the most of Health Hive! 😊',
-                    'settings': 'You can manage your account settings and preferences through your profile section in the dashboard.',
-                    'notification': 'Reminders will send you notifications based on your settings. You can customize these in the Reminders section.',
-                    'goal': 'Set and track your health goals through the Activity Tracker and Dashboard. Monitor your progress and adjust your targets as needed!'
-                };
-
-                let response = "I'm here to help! Try asking about:\n- Activity tracking\n- Setting reminders\n- Team features\n- Progress analytics\n- Dashboard features";
+                // Show typing indicator
+                const typingIndicator = addMessage("Thinking...", 'assistant');
                 
-                for (let keyword in responses) {
-                    if (message.toLowerCase().includes(keyword)) {
-                        response = responses[keyword];
-                        break;
+                // Create FormData
+                const formData = new FormData();
+                formData.append('message', message);
+                
+                // Send message to backend
+                fetch('/accounts/chat/', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
                     }
-                }
-
-                addMessage(response, 'assistant');
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Remove typing indicator
+                    if (typingIndicator) {
+                        typingIndicator.remove();
+                    }
+                    
+                    // Add the AI response
+                    if (data.response) {
+                        addMessage(data.response, 'assistant');
+                    } else if (data.error) {
+                        console.error('Error:', data.error);
+                        addMessage("Sorry, I encountered an error. Please try again.", 'assistant');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    if (typingIndicator) {
+                        typingIndicator.remove();
+                    }
+                    addMessage("Sorry, I'm having trouble connecting. Please try again.", 'assistant');
+                });
             }
 
             sendMessage.addEventListener('click', () => {

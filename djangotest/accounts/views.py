@@ -9,8 +9,10 @@ from django.utils import timezone
 from tracker.models import Activity
 from reminders.models import Reminder
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.views.decorators.http import require_http_methods
+import openai  # You'll need to pip install openai
+import os
 
 def signup(request):
     if request.method == 'POST':
@@ -172,3 +174,35 @@ def badges_view(request):
     }
     
     return render(request, 'accounts/badges.html', context)
+
+@csrf_exempt
+@login_required
+def chat_message(request):
+    if request.method == 'POST':
+        try:
+            message = request.POST.get('message', '')
+            
+            # Initialize OpenAI client using environment variable
+            client = openai.OpenAI(
+                api_key=os.getenv('OPENAI_API_KEY')
+            )
+            
+            # Get response from GPT (new style)
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful health and wellness assistant for the HealthHive platform. Provide concise, friendly responses about fitness tracking, health reminders, and wellness goals."},
+                    {"role": "user", "content": message}
+                ]
+            )
+            
+            # Extract and return the response (new style)
+            ai_response = response.choices[0].message.content
+            print(f"AI Response: {ai_response}")  # Debug logging
+            return JsonResponse({
+                'response': ai_response
+            })
+        except Exception as e:
+            print(f"Error in chat_message: {str(e)}")  # Error logging
+            return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({'error': 'Invalid request'}, status=400)

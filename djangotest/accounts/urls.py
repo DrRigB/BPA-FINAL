@@ -8,4 +8,5 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('team-dashboard/', views.team_dashboard, name='team_dashboard'),
     path('badges/', views.badges_view, name='badges'),
+    path('chat/', views.chat_message, name='chat_message'),
 ]
