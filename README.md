@@ -49,8 +49,7 @@ Before setting up the project locally, ensure you have the following installed:
 - [npm](https://www.npmjs.com/)
 - [Git](https://git-scm.com/)
   ```bash
-  pip install django
-  pip install mysql
+  pip install django mysqlclient openai
 
 ### Setup
 
