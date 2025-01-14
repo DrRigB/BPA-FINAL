@@ -9,28 +9,40 @@ from django.utils import timezone
 from tracker.models import Activity
 from reminders.models import Reminder
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_protect, csrf_exempt
+from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+from django.contrib import messages
 import openai  # You'll need to pip install openai
 import os
 
 def signup(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '')
         
-        # Add validation to ensure username is provided
+        # Validate required fields
         if not username:
-            return render(request, 'accounts/signup.html', {
-                'error': 'Username is required'
-            })
+            messages.error(request, 'Username is required')
+            return render(request, 'accounts/signup.html')
+            
+        if not password:
+            messages.error(request, 'Password is required')
+            return render(request, 'accounts/signup.html')
+
+        # Validate email
+        try:
+            validate_email(email)
+        except ValidationError:
+            messages.error(request, 'Please enter a valid email address')
+            return render(request, 'accounts/signup.html')
             
         # Check if username already exists
         if CustomUser.objects.filter(username=username).exists():
-            return render(request, 'accounts/signup.html', {
-                'error': 'Username already exists'
-            })
+            messages.error(request, 'Username already exists')
+            return render(request, 'accounts/signup.html')
 
         try:
             # Create the user
@@ -41,30 +53,39 @@ def signup(request):
             )
             # Log the user in
             login(request, user)
-            return redirect('home')  # Redirect to home page after successful signup
+            messages.success(request, 'Account created successfully!')
+            return redirect('home')
         except ValueError as e:
-            return render(request, 'accounts/signup.html', {
-                'error': str(e)
-            })
+            messages.error(request, str(e))
+            return render(request, 'accounts/signup.html')
 
     return render(request, 'accounts/signup.html')
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username', '')
+        password = request.POST.get('password', '')
+        
+        if not username or not password:
+            messages.error(request, 'Please enter both username and password')
+            return render(request, 'accounts/login.html')
+            
         user = authenticate(request, username=username, password=password)
         
         if user is not None:
             login(request, user)
+            messages.success(request, 'Logged in successfully!')
             return redirect('dashboard')
         else:
-            return render(request, 'accounts/login.html', {'error_message': 'Invalid credentials'})
+            messages.error(request, 'Invalid credentials')
+            return render(request, 'accounts/login.html')
     
     return render(request, 'accounts/login.html')
 
+@login_required
 def logout_view(request):
     logout(request)
+    messages.info(request, 'Logged out successfully!')
     return redirect('home')
 
 @login_required
@@ -175,7 +196,7 @@ def badges_view(request):
     
     return render(request, 'accounts/badges.html', context)
 
-@csrf_exempt
+@csrf_protect
 @login_required
 def chat_message(request):
     if request.method == 'POST':

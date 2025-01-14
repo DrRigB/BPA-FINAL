@@ -12,34 +12,33 @@ def activity_list(request):
 @login_required
 def add_activity(request):
     if request.method == 'POST':
-        try:
-            activity = Activity(
-                user=request.user,
-                name=request.POST['name'],
-                duration_minutes=int(request.POST['duration_minutes']),
-                heart_rate=int(request.POST['heart_rate'])
-            )
+        form = ActivityForm(request.POST)
+        if form.is_valid():
+            activity = form.save(commit=False)
+            activity.user = request.user
             activity.save()
             messages.success(request, 'Activity added successfully!')
             return redirect('activity_list')
-        except ValueError as e:
-            messages.error(request, str(e))
-    return render(request, 'tracker/add_activity.html')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = ActivityForm()
+    return render(request, 'tracker/add_activity.html', {'form': form})
 
 @login_required
 def edit_activity(request, pk):
     activity = get_object_or_404(Activity, pk=pk, user=request.user)
     if request.method == 'POST':
-        try:
-            activity.name = request.POST['name']
-            activity.duration_minutes = int(request.POST['duration_minutes'])
-            activity.heart_rate = int(request.POST['heart_rate'])
-            activity.save()
+        form = ActivityForm(request.POST, instance=activity)
+        if form.is_valid():
+            form.save()
             messages.success(request, 'Activity updated successfully!')
             return redirect('activity_list')
-        except ValueError as e:
-            messages.error(request, str(e))
-    return render(request, 'tracker/edit_activity.html', {'activity': activity})
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = ActivityForm(instance=activity)
+    return render(request, 'tracker/edit_activity.html', {'form': form, 'activity': activity})
 
 @login_required
 def delete_activity(request, pk):

@@ -25,7 +25,15 @@ class Activity(models.Model):
             MaxValueValidator(220, message="N/A, please try again")
         ]
     )
-    calories_burned = models.IntegerField(blank=True, null=True, db_index=True)
+    calories_burned = models.IntegerField(
+        blank=True, 
+        null=True, 
+        db_index=True,
+        validators=[
+            MinValueValidator(0, message="Calories burned cannot be negative"),
+            MaxValueValidator(5000, message="Calories burned seems too high")
+        ]
+    )
     date = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
@@ -56,5 +64,5 @@ class Activity(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.user.username} - {self.name} - {self.date}"
+        return f"{self.name} by {self.user.username} on {self.date.strftime('%Y-%m-%d %H:%M')}"
 

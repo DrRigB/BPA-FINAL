@@ -140,10 +140,7 @@ STATIC_URL = '/static/'
 
 # Directories where static files are stored
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
-    BASE_DIR / "home" / "static",
-    BASE_DIR / "tracker" / "static",
-    BASE_DIR / "accounts" / "static",
+    BASE_DIR / 'static',
 ]
 
 # For production (collect static files here)
@@ -164,6 +161,13 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 # OpenAI settings
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+if not OPENAI_API_KEY:
+    import warnings
+    warnings.warn("OPENAI_API_KEY is not set. Chat features will not work.")
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Media files configuration
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
