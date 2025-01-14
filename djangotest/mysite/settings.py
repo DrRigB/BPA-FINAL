@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-2ufae9kn1chely&wth)_qj^f7ljxm6+c72&3bw81_2m-ks5erd
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.56.1', 'healthhive.guru', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
