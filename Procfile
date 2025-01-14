@@ -1,1 +1,1 @@
-web: gunicorn djangotest.wsgi --log-file - 
+web: cd djangotest && gunicorn djangotest.wsgi --log-file - 
