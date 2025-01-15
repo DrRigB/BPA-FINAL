@@ -50,11 +50,12 @@ header {
 .logo {
     display: flex;
     align-items: center;
+    max-width: 200px;
 }
 
 .logo-img {
-    max-height: 60px;
-    width: auto;
+    max-height: 40px !important;
+    width: auto !important;
     margin-right: 10px;
 }
 
@@ -219,31 +220,37 @@ nav a:not(.cta-button)::after {
 }
 
 .feature-card {
-    background-color: var(--white);
+    background: white;
     padding: 2rem;
-    border-radius: var(--border-radius);
-    box-shadow: 0 2px 10px var(--shadow);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     text-align: center;
-    transition: transform var(--transition-speed);
+    margin: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #eee;
 }
 
 .feature-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
 .feature-icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    color: #ff7c00;
 }
 
 .feature-card h3 {
-    color: var(--text-color);
+    color: #ff7c00;
     margin-bottom: 1rem;
+    font-size: 1.5rem;
 }
 
 .feature-card p {
     color: #666;
     line-height: 1.6;
+    font-size: 1.1rem;
 }
 
 @media (max-width: 768px) {

@@ -160,8 +160,9 @@ h1::after {
 }
 
 .btn-danger {
-    background-color: #ff7c00;
-    color: white;
+    background-color: #ff7c00 !important;
+    color: white !important;
+    border: none !important;
 }
 
 .btn-primary:hover {
@@ -173,7 +174,7 @@ h1::after {
 }
 
 .btn-danger:hover {
-    background-color: #ff9933;
+    background-color: #ff9933 !important;
 }
 
 /* Activity Details */
@@ -252,4 +253,17 @@ h1::after {
 
 .cta-button:hover {
     background-color: #F4511E;
+}
+
+/* Add specific styles for the activity tracker start */
+.service a.btn-primary {
+    background-color: #ff7c00;
+    color: white;
+    display: inline-block;
+    margin-top: 1rem;
+    text-decoration: none;
+}
+
+.service a.btn-primary:hover {
+    background-color: #ff9933;
 }
