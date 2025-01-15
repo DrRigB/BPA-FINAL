@@ -47,11 +47,11 @@ header {
 .logo {
     display: flex;
     align-items: center;
-    max-width: 150px;
+    max-width: 80px;
 }
 
 .logo-img {
-    max-height: 30px !important;
+    max-height: 25px !important;
     width: auto !important;
     margin-right: 10px;
 }
@@ -302,39 +302,45 @@ nav a.cta-button:hover {
 
 /* Services Section */
 .services {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
     padding: 4rem 2rem;
-    background-color: var(--white);
-    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .service {
-    display: block;
-    background: var(--white);
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background-color: white;
     padding: 2rem;
-    margin: 1rem auto;
-    max-width: 800px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px var(--shadow);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
     text-decoration: none;
-    color: var(--text-color);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .service:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .service h3 {
-    color: var(--primary-color);
+    font-size: 1.8em;
+    color: #ff7c00;
     margin-bottom: 1rem;
-    font-size: 1.5rem;
 }
 
 .service p {
-    color: var(--text-color);
-    line-height: 1.6;
-    font-size: 1.1rem;
+    font-size: 1.1em;
+    line-height: 1.5;
 }
 
 /* Contact Section */
