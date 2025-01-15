@@ -50,11 +50,11 @@ header {
 .logo {
     display: flex;
     align-items: center;
-    max-width: 200px;
+    max-width: 150px;
 }
 
 .logo-img {
-    max-height: 40px !important;
+    max-height: 30px !important;
     width: auto !important;
     margin-right: 10px;
 }
@@ -220,10 +220,10 @@ nav a:not(.cta-button)::after {
 }
 
 .feature-card {
-    background: white;
+    background: var(--white);
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px var(--shadow);
     text-align: center;
     margin: 1rem;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -238,17 +238,17 @@ nav a:not(.cta-button)::after {
 .feature-icon {
     font-size: 3rem;
     margin-bottom: 1.5rem;
-    color: #ff7c00;
+    color: var(--primary-color);
 }
 
 .feature-card h3 {
-    color: #ff7c00;
+    color: var(--primary-color);
     margin-bottom: 1rem;
     font-size: 1.5rem;
 }
 
 .feature-card p {
-    color: #666;
+    color: var(--text-color);
     line-height: 1.6;
     font-size: 1.1rem;
 }
@@ -484,15 +484,6 @@ button:focus {
 
 .feature-button:hover {
     background-color: #45a049;
-}
-
-.feature-card {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    text-align: center;
-    margin: 10px;
 }
 
 .features-grid {
