@@ -128,9 +128,6 @@ STATICFILES_DIRS = [
     BASE_DIR / 'home' / 'static',
 ]
 
-# Use WhiteNoise for static files
-STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
-
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
