@@ -1,1 +1,1 @@
-web: cd djangotest && gunicorn mysite.wsgi:application --log-file -
+﻿web: cd djangotest && PYTHONPATH=$PYTHONPATH:$PWD gunicorn djangotest.mysite.wsgi:application --log-file -
