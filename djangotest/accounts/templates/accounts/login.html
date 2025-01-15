@@ -5,13 +5,143 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | HealthHive</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'accounts/login.css' %}">
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .login-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #FF8C00;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            display: block;
+            color: #444;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #FFB74D;
+            border-radius: 5px;
+            background-color: white;
+            color: #333;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #FF8C00;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: #FF8C00;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #FFB74D;
+        }
+
+        .messages {
+            margin-bottom: 1.2rem;
+            text-align: center;
+        }
+
+        .message {
+            color: #FF8C00;
+            margin-bottom: 0.5rem;
+        }
+
+        .links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #FFB74D;
+        }
+
+        .links a {
+            color: #FF8C00;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            font-weight: bold;
+        }
+
+        .links a:hover {
+            color: #FFB74D;
+            text-decoration: underline;
+        }
+
+        .error {
+            background-color: #FFF3E0;
+            border-left: 4px solid #FF8C00;
+            color: #FF8C00;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 10px;
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="login-container">
         <h1>Login to HealthHive</h1>
-        {% if error_message %}
-        <p class="error">{{ error_message }}</p>
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
         {% endif %}
         <form method="POST" class="login-form">
             {% csrf_token %}
@@ -24,8 +154,11 @@
                 <input type="password" id="password" name="password" required>
             </div>
             <button type="submit">Login</button>
+            <div class="links">
+                <a href="{% url 'signup' %}">Sign Up</a>
+                <a href="{% url 'password_reset' %}">Forgot Password?</a>
+            </div>
         </form>
-        <p>Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
     </div>
 </body>
 </html>

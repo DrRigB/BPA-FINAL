@@ -16,12 +16,24 @@ from django.core.exceptions import ValidationError
 from django.contrib import messages
 import openai  # You'll need to pip install openai
 import os
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse
+from .models import VerificationCode
+from .models import Team, TeamMembership
+import random
+import string
 
 def signup(request):
     if request.method == 'POST':
         username = request.POST.get('username', '').strip()
         email = request.POST.get('email', '').strip()
         password = request.POST.get('password', '')
+        confirm_password = request.POST.get('confirm_password', '')
         
         # Validate required fields
         if not username:
@@ -30,6 +42,24 @@ def signup(request):
             
         if not password:
             messages.error(request, 'Password is required')
+            return render(request, 'accounts/signup.html')
+            
+        if not email:
+            messages.error(request, 'Email is required')
+            return render(request, 'accounts/signup.html')
+            
+        if not confirm_password:
+            messages.error(request, 'Please confirm your password')
+            return render(request, 'accounts/signup.html')
+            
+        # Check if passwords match
+        if password != confirm_password:
+            messages.error(request, 'Passwords do not match')
+            return render(request, 'accounts/signup.html')
+            
+        # Check password length
+        if len(password) < 8:
+            messages.error(request, 'Password must be at least 8 characters long')
             return render(request, 'accounts/signup.html')
 
         # Validate email
@@ -43,20 +73,32 @@ def signup(request):
         if CustomUser.objects.filter(username=username).exists():
             messages.error(request, 'Username already exists')
             return render(request, 'accounts/signup.html')
+            
+        # Check if email already exists
+        if CustomUser.objects.filter(email=email).exists():
+            messages.error(request, 'Email already exists')
+            return render(request, 'accounts/signup.html')
 
         try:
-            # Create the user
+            # Create and save the user
             user = CustomUser.objects.create_user(
                 username=username,
                 email=email,
                 password=password
             )
-            # Log the user in
+            
+            # Log the user in immediately
             login(request, user)
-            messages.success(request, 'Account created successfully!')
-            return redirect('home')
-        except ValueError as e:
-            messages.error(request, str(e))
+            
+            # Create success message
+            messages.success(request, f'Welcome to HealthHive, {username}!')
+            
+            # Redirect to dashboard
+            return redirect('dashboard')
+            
+        except Exception as e:
+            print(f"Error creating user: {str(e)}")  # Debug logging
+            messages.error(request, 'Error creating account. Please try again.')
             return render(request, 'accounts/signup.html')
 
     return render(request, 'accounts/signup.html')
@@ -85,8 +127,7 @@ def login_view(request):
 @login_required
 def logout_view(request):
     logout(request)
-    messages.info(request, 'Logged out successfully!')
-    return redirect('home')
+    return redirect('/')  # Redirect to root URL instead of named URL
 
 @login_required
 def dashboard(request):
@@ -166,8 +207,40 @@ def dashboard(request):
     
     return render(request, 'accounts/dashboard.html', context)
 
+@login_required
 def team_dashboard(request):
-    return render(request, 'accounts/team_dashboard.html')
+    team_id = request.GET.get('team_id')
+    if not team_id:
+        messages.error(request, 'No team selected')
+        return redirect('dashboard')
+        
+    try:
+        # Get the team and verify user is a member
+        team = Team.objects.get(id=team_id)
+        if not TeamMembership.objects.filter(team=team, user=request.user).exists():
+            messages.error(request, 'You are not a member of this team')
+            return redirect('dashboard')
+            
+        # Get team members with their roles
+        team_members = TeamMembership.objects.filter(team=team).select_related('user')
+        
+        # Get team statistics
+        team_activities = Activity.objects.filter(user__teammembership__team=team)
+        total_calories = sum(a.calories_burned for a in team_activities if a.calories_burned)
+        total_activities = team_activities.count()
+        
+        context = {
+            'team': team,
+            'team_members': team_members,
+            'total_calories': total_calories,
+            'total_activities': total_activities,
+        }
+        
+        return render(request, 'accounts/team_dashboard.html', context)
+        
+    except Team.DoesNotExist:
+        messages.error(request, 'Team not found')
+        return redirect('dashboard')
 
 @login_required
 def badges_view(request):
@@ -202,28 +275,250 @@ def chat_message(request):
     if request.method == 'POST':
         try:
             message = request.POST.get('message', '')
+            api_key = os.getenv('OPENAI_API_KEY')
             
-            # Initialize OpenAI client using environment variable
-            client = openai.OpenAI(
-                api_key=os.getenv('OPENAI_API_KEY')
-            )
+            if not api_key:
+                return JsonResponse({
+                    'error': 'OpenAI API key is not set. Please configure the API key in your environment.'
+                }, status=400)
             
-            # Get response from GPT (new style)
-            response = client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system", "content": "You are a helpful health and wellness assistant for the HealthHive platform. Provide concise, friendly responses about fitness tracking, health reminders, and wellness goals."},
-                    {"role": "user", "content": message}
-                ]
-            )
-            
-            # Extract and return the response (new style)
-            ai_response = response.choices[0].message.content
-            print(f"AI Response: {ai_response}")  # Debug logging
-            return JsonResponse({
-                'response': ai_response
-            })
+            try:
+                # Initialize OpenAI client with the API key
+                client = openai.OpenAI(api_key=api_key)
+                
+                # Get response from GPT
+                response = client.chat.completions.create(
+                    model="gpt-3.5-turbo",
+                    messages=[
+                        {"role": "system", "content": "You are a helpful health and wellness assistant for the HealthHive platform. Provide concise, friendly responses about fitness tracking, health reminders, and wellness goals."},
+                        {"role": "user", "content": message}
+                    ],
+                    max_tokens=150
+                )
+                
+                # Extract and return the response
+                ai_response = response.choices[0].message.content
+                return JsonResponse({'response': ai_response})
+                
+            except openai.APIError as api_error:
+                print(f"OpenAI API Error: {str(api_error)}")  # Debug logging
+                return JsonResponse({
+                    'error': 'Error communicating with the AI service. Please try again.'
+                }, status=500)
+                
         except Exception as e:
-            print(f"Error in chat_message: {str(e)}")  # Error logging
-            return JsonResponse({'error': str(e)}, status=500)
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+            print(f"Error in chat_message: {str(e)}")  # Debug logging
+            return JsonResponse({
+                'error': 'An unexpected error occurred. Please try again.'
+            }, status=500)
+            
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+def password_reset_request(request):
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+        if not email:
+            messages.error(request, 'Please enter your email address.')
+            return render(request, 'accounts/password_reset.html')
+            
+        try:
+            user = CustomUser.objects.get(email=email)
+            # Generate verification code
+            verification = VerificationCode.generate_code(user)
+            
+            # Send email with verification code
+            subject = 'HealthHive Password Reset Code'
+            message = f'''Hello {user.username},
+
+Your password reset code is: {verification.code}
+
+This code will expire in 15 minutes. If you did not request this reset, please ignore this email.
+
+Best regards,
+The HealthHive Team'''
+
+            try:
+                send_mail(
+                    subject,
+                    message,
+                    os.getenv('EMAIL_HOST_USER'),
+                    [user.email],
+                    fail_silently=False,
+                )
+                messages.success(request, 'Verification code has been sent to your email.')
+                # Store email in session for verification
+                request.session['reset_email'] = email
+                return redirect('verify_code')
+            except Exception as e:
+                print(f"Email sending error: {str(e)}")  # Debug logging
+                if 'smtp' in str(e).lower():
+                    messages.error(request, 'Error with email service. Please try again later or contact support.')
+                else:
+                    messages.error(request, 'Error sending email. Please try again.')
+                return render(request, 'accounts/password_reset.html')
+                
+        except CustomUser.DoesNotExist:
+            # Use a vague message for security
+            messages.error(request, 'If an account exists with this email, a reset code will be sent.')
+            return render(request, 'accounts/password_reset.html')
+    
+    return render(request, 'accounts/password_reset.html')
+
+def verify_code(request):
+    if 'reset_email' not in request.session:
+        messages.error(request, 'Please request a password reset first.')
+        return redirect('password_reset')
+        
+    if request.method == 'POST':
+        code = request.POST.get('code', '')
+        email = request.session.get('reset_email')
+        
+        try:
+            user = CustomUser.objects.get(email=email)
+            verification = VerificationCode.objects.filter(
+                user=user,
+                code=code,
+                is_used=False
+            ).latest('created_at')
+            
+            if verification and verification.is_valid():
+                verification.is_used = True
+                verification.save()
+                # Store user ID in session for password reset
+                request.session['reset_user_id'] = user.id
+                return redirect('set_new_password')
+            else:
+                messages.error(request, 'Invalid or expired code.')
+        except (CustomUser.DoesNotExist, VerificationCode.DoesNotExist):
+            messages.error(request, 'Invalid code.')
+        
+    return render(request, 'accounts/verify_code.html')
+
+def set_new_password(request):
+    if 'reset_user_id' not in request.session:
+        messages.error(request, 'Invalid password reset session.')
+        return redirect('password_reset')
+        
+    if request.method == 'POST':
+        password1 = request.POST.get('new_password1')
+        password2 = request.POST.get('new_password2')
+        
+        if password1 and password1 == password2:
+            try:
+                user = CustomUser.objects.get(id=request.session['reset_user_id'])
+                user.set_password(password1)
+                user.save()
+                # Clear session data
+                del request.session['reset_email']
+                del request.session['reset_user_id']
+                messages.success(request, 'Your password has been reset successfully.')
+                return redirect('login')
+            except CustomUser.DoesNotExist:
+                messages.error(request, 'Error resetting password.')
+        else:
+            messages.error(request, 'Passwords do not match.')
+    
+    return render(request, 'accounts/set_new_password.html')
+
+@login_required
+@require_http_methods(["POST"])
+def create_team(request):
+    try:
+        name = request.POST.get('teamName')
+        organization = request.POST.get('organization', '')
+        description = request.POST.get('teamDescription', '')
+        
+        if not name:
+            return JsonResponse({'error': 'Team name is required'}, status=400)
+            
+        # Generate a unique 6-character code
+        while True:
+            code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+            if not Team.objects.filter(code=code).exists():
+                break
+        
+        # Create the team
+        team = Team.objects.create(
+            name=name,
+            organization=organization,
+            description=description,
+            code=code,
+            leader=request.user
+        )
+        
+        # Add the creator as a team leader
+        TeamMembership.objects.create(
+            user=request.user,
+            team=team,
+            role='LEADER'
+        )
+        
+        return JsonResponse({
+            'success': True,
+            'code': code,
+            'teamId': team.id,
+            'message': 'Team created successfully'
+        })
+        
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@login_required
+@require_http_methods(["POST"])
+def join_team(request):
+    try:
+        code = request.POST.get('teamCode', '').strip().upper()
+        
+        if not code:
+            return JsonResponse({'error': 'Team code is required'}, status=400)
+            
+        try:
+            team = Team.objects.get(code=code)
+        except Team.DoesNotExist:
+            return JsonResponse({'error': 'Invalid team code'}, status=404)
+            
+        # Check if user is already a member
+        if TeamMembership.objects.filter(user=request.user, team=team).exists():
+            return JsonResponse({'error': 'You are already a member of this team'}, status=400)
+            
+        # Add user as team member
+        TeamMembership.objects.create(
+            user=request.user,
+            team=team,
+            role='MEMBER'
+        )
+        
+        return JsonResponse({
+            'success': True,
+            'teamId': team.id,
+            'message': 'Successfully joined the team'
+        })
+        
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@login_required
+def get_user_teams(request):
+    try:
+        # Get teams where user is a member
+        memberships = TeamMembership.objects.filter(user=request.user).select_related('team')
+        teams = []
+        
+        for membership in memberships:
+            team = membership.team
+            teams.append({
+                'id': team.id,
+                'name': team.name,
+                'organization': team.organization,
+                'role': membership.role,
+                'memberCount': team.members.count(),
+                'isLeader': membership.role == 'LEADER'
+            })
+            
+        return JsonResponse({
+            'success': True,
+            'teams': teams
+        })
+        
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

@@ -59,19 +59,8 @@
                             <button class="create-team-btn">+ Create Team</button>
                         </div>
                     </div>
-                    <div class="team-card active">
-                        <a href="{% url 'team_dashboard' %}" class="team-link">
-                            <div class="team-info">
-                                <h4>Development Team</h4>
-                                <p>4 members</p>
-                            </div>
-                            <div class="team-stats">
-                                <div class="stat">
-                                    <span class="stat-value">1,250</span>
-                                    <span class="stat-label">Total Calories</span>
-                                </div>
-                            </div>
-                        </a>
+                    <div id="teamsContainer">
+                        <!-- Teams will be loaded here dynamically -->
                     </div>
                 </div>
 
@@ -284,13 +273,14 @@
         <div class="modal-content">
             <h3>Create New Team</h3>
             <form id="createTeamForm">
+                {% csrf_token %}
                 <div class="form-group">
                     <label for="teamName">Team Name*</label>
-                    <input type="text" id="teamName" required>
+                    <input type="text" id="teamName" name="teamName" required>
                 </div>
                 <div class="form-group">
                     <label for="organization">Organization</label>
-                    <input type="text" id="organization">
+                    <input type="text" id="organization" name="organization">
                 </div>
                 <div class="form-group">
                     <label for="teamLeader">Team Leader*</label>
@@ -298,7 +288,7 @@
                 </div>
                 <div class="form-group">
                     <label for="teamDescription">Team Description</label>
-                    <textarea id="teamDescription" rows="3"></textarea>
+                    <textarea id="teamDescription" name="teamDescription" rows="3"></textarea>
                 </div>
                 <div class="modal-buttons">
                     <button type="button" class="cancel-btn">Cancel</button>
@@ -317,7 +307,7 @@
                 <button id="copyCode" class="copy-btn">Copy</button>
             </div>
             <div class="modal-buttons">
-                <button class="submit-btn" onclick="closeAllModals()">Done</button>
+                <button type="button" class="submit-btn" id="doneBtn">Done</button>
             </div>
         </div>
     </div>
@@ -341,7 +331,8 @@
     <script>
         // Wait for the DOM to be fully loaded
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Script loaded'); // Debug line
+            // Load user's teams
+            loadUserTeams();
 
             // Get button elements
             const createTeamBtn = document.querySelector('.create-team-btn');
@@ -351,19 +342,46 @@
             const teamCodeModal = document.getElementById('teamCodeModal');
             const cancelBtns = document.querySelectorAll('.cancel-btn');
 
-            console.log('Create Team Button:', createTeamBtn); // Debug line
-            console.log('Join Team Button:', joinTeamBtn); // Debug line
-
-            // Function to generate random team code
-            function generateTeamCode() {
-                return Math.random().toString(36).substring(2, 8).toUpperCase();
+            // Function to load user's teams
+            function loadUserTeams() {
+                fetch('/accounts/get-user-teams/')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const teamsContainer = document.getElementById('teamsContainer');
+                            teamsContainer.innerHTML = ''; // Clear existing teams
+                            
+                            if (data.teams.length === 0) {
+                                teamsContainer.innerHTML = '<p class="no-teams">No teams yet. Create or join a team to get started!</p>';
+                                return;
+                            }
+                            
+                            data.teams.forEach(team => {
+                                const teamCard = document.createElement('div');
+                                teamCard.className = 'team-card';
+                                teamCard.innerHTML = `
+                                    <a href="/accounts/team-dashboard/?team_id=${team.id}" class="team-link">
+                                        <div class="team-info">
+                                            <h4>${team.name}</h4>
+                                            <p>${team.memberCount} members</p>
+                                            ${team.organization ? `<p class="organization">${team.organization}</p>` : ''}
+                                            <span class="role-badge ${team.isLeader ? 'leader' : 'member'}">${team.role}</span>
+                                        </div>
+                                    </a>
+                                `;
+                                teamsContainer.appendChild(teamCard);
+                            });
+                        } else {
+                            console.error('Error loading teams:', data.error);
+                        }
+                    })
+                    .catch(error => console.error('Error loading teams:', error));
             }
 
             // Function to show modal
             function showModal(modal) {
                 if (modal) {
                     modal.style.display = 'flex';
-                    console.log('Showing modal'); // Debug line
                 }
             }
 
@@ -372,14 +390,12 @@
                 [createTeamModal, joinTeamModal, teamCodeModal].forEach(modal => {
                     if (modal) modal.style.display = 'none';
                 });
-                console.log('Closing modals'); // Debug line
             }
 
             // Add click listeners to buttons
             if (createTeamBtn) {
                 createTeamBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    console.log('Create team clicked'); // Debug line
                     showModal(createTeamModal);
                 });
             }
@@ -387,7 +403,6 @@
             if (joinTeamBtn) {
                 joinTeamBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    console.log('Join team clicked'); // Debug line
                     showModal(joinTeamModal);
                 });
             }
@@ -397,22 +412,67 @@
             if (createTeamForm) {
                 createTeamForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    const code = generateTeamCode();
-                    const codeElement = document.getElementById('generatedCode');
-                    if (codeElement) codeElement.textContent = code;
-                    closeAllModals();
-                    showModal(teamCodeModal);
+                    
+                    const formData = new FormData(this);
+                    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                    fetch('/accounts/create-team/', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': csrfToken
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const codeElement = document.getElementById('generatedCode');
+                            if (codeElement) codeElement.textContent = data.code;
+                            createTeamForm.reset();
+                            closeAllModals();
+                            showModal(teamCodeModal);
+                            loadUserTeams(); // Reload teams list
+                        } else {
+                            alert(data.error || 'Error creating team');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error creating team');
+                    });
                 });
             }
 
-            // Handle copy code button
-            const copyBtn = document.getElementById('copyCode');
-            if (copyBtn) {
-                copyBtn.addEventListener('click', function() {
-                    const code = document.getElementById('generatedCode').textContent;
-                    navigator.clipboard.writeText(code);
-                    this.textContent = 'Copied!';
-                    setTimeout(() => this.textContent = 'Copy', 2000);
+            // Handle join team form submission
+            const joinTeamForm = document.getElementById('joinTeamForm');
+            if (joinTeamForm) {
+                joinTeamForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData();
+                    formData.append('teamCode', document.getElementById('teamCode').value);
+
+                    fetch('/accounts/join-team/', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            closeAllModals();
+                            loadUserTeams(); // Reload teams list
+                            alert('Successfully joined the team!');
+                        } else {
+                            alert(data.error || 'Error joining team');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error joining team');
+                    });
                 });
             }
 
@@ -429,8 +489,138 @@
                     });
                 }
             });
+
+            // Add click listener for Done button
+            const doneBtn = document.getElementById('doneBtn');
+            if (doneBtn) {
+                doneBtn.addEventListener('click', closeAllModals);
+            }
+
+            // Add back the copy code functionality
+            const copyBtn = document.getElementById('copyCode');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', function() {
+                    const code = document.getElementById('generatedCode').textContent;
+                    navigator.clipboard.writeText(code);
+                    this.textContent = 'Copied!';
+                    setTimeout(() => this.textContent = 'Copy', 2000);
+                });
+            }
         });
     </script>
+
+    <style>
+        .teams-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .team-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-link {
+            display: block;
+            padding: 1rem;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .team-info h4 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .team-info p {
+            margin: 0.25rem 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .organization {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        .role-badge.leader {
+            background: #ff7c00;
+            color: white;
+        }
+
+        .role-badge.member {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .no-teams {
+            text-align: center;
+            color: #666;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .team-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .create-team-btn,
+        .join-team-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        }
+
+        .create-team-btn {
+            background: #ff7c00;
+            color: white;
+        }
+
+        .join-team-btn {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .create-team-btn:hover {
+            background: #ff8c00;
+        }
+
+        .join-team-btn:hover {
+            background: #dee2e6;
+        }
+    </style>
 
     <div class="chat-assistant">
         <div class="chat-bubble" id="chatBubble">
@@ -501,19 +691,22 @@
                 const formData = new FormData();
                 formData.append('message', message);
                 
+                // Get CSRF token
+                const csrftoken = getCookie('csrftoken');
+                
                 // Send message to backend
                 fetch('/accounts/chat/', {
                     method: 'POST',
                     body: formData,
                     headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': csrftoken,
                     }
                 })
                 .then(response => response.json())
                 .then(data => {
                     // Remove typing indicator
                     if (typingIndicator) {
-                        typingIndicator.remove();
+                        chatMessages.removeChild(typingIndicator);
                     }
                     
                     // Add the AI response
@@ -527,7 +720,7 @@
                 .catch(error => {
                     console.error('Error:', error);
                     if (typingIndicator) {
-                        typingIndicator.remove();
+                        chatMessages.removeChild(typingIndicator);
                     }
                     addMessage("Sorry, I'm having trouble connecting. Please try again.", 'assistant');
                 });

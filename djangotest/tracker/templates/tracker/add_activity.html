@@ -27,12 +27,14 @@
                 <input type="text" id="name" name="name" required>
             </div>
             <div class="form-group">
-                <label for="duration_minutes">Duration (minutes):</label>
-                <input type="number" id="duration_minutes" name="duration_minutes" required>
+                <label for="duration_minutes">Duration (minutes)*</label>
+                <input type="number" id="duration_minutes" name="duration_minutes" required min="1" max="1440" step="1">
+                <small class="form-text">Enter a duration between 1 and 1440 minutes (24 hours)</small>
             </div>
             <div class="form-group">
-                <label for="heart_rate">Heart Rate (bpm):</label>
-                <input type="number" id="heart_rate" name="heart_rate" required>
+                <label for="heart_rate">Heart Rate (bpm)</label>
+                <input type="number" id="heart_rate" name="heart_rate" min="40" max="220" step="1">
+                <small class="form-text">Enter a heart rate between 40 and 220 bpm</small>
             </div>
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">Add Activity</button>

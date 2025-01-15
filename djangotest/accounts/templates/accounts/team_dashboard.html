@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Development Team - Health Hive</title>
+    <title>{{ team.name }} - Health Hive</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'accounts/dashboard.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -190,6 +190,78 @@
         .nav-link.active {
             color: #ff7c00;
         }
+
+        .team-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .team-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .view-code-btn, .exit-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .view-code-btn {
+            background: #ff7c00;
+            color: white;
+        }
+
+        .exit-btn {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .view-code-btn:hover {
+            background: #ff8c00;
+        }
+
+        .exit-btn:hover {
+            background: #dee2e6;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .team-code {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
     </style>
 </head>
 <body>
@@ -211,35 +283,38 @@
         <main class="team-dashboard-content">
             <div class="team-section">
                 <div class="team-header">
-                    <h2 class="team-title">Development Team</h2>
+                    <div class="team-header-top">
+                        <h2 class="team-title">{{ team.name }}</h2>
+                        <div class="team-actions">
+                            {% if team.leader == user %}
+                            <button class="view-code-btn" onclick="showTeamCode('{{ team.code }}')">View Team Code</button>
+                            {% endif %}
+                            <a href="{% url 'dashboard' %}" class="exit-btn">Exit Team</a>
+                        </div>
+                    </div>
+                    {% if team.organization %}
+                    <p class="team-organization">{{ team.organization }}</p>
+                    {% endif %}
                     <div class="team-header-stats">
                         <div class="stat-item">
-                            <span class="stat-value">1,250</span>
+                            <span class="stat-value">{{ total_calories }}</span>
                             <span class="stat-label">Total Team Calories</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-value">24</span>
+                            <span class="stat-value">{{ total_activities }}</span>
                             <span class="stat-label">Team Activities</span>
                         </div>
                     </div>
                 </div>
                 <div class="team-members-grid">
-                    <div class="member" data-member-id="1">
-                        <span class="member-name">Alyssa Emerson</span>
-                        <span class="member-role">Creative Designer</span>
+                    {% for membership in team_members %}
+                    <div class="member" data-member-id="{{ membership.user.id }}">
+                        <span class="member-name">{{ membership.user.username }}</span>
+                        <span class="member-role">{{ membership.get_role_display }}</span>
                     </div>
-                    <div class="member" data-member-id="2">
-                        <span class="member-name">Brant Simpson</span>
-                        <span class="member-role">AI Agent Designer</span>
-                    </div>
-                    <div class="member" data-member-id="3">
-                        <span class="member-name">Rigdon Windsor</span>
-                        <span class="member-role">Developer</span>
-                    </div>
-                    <div class="member" data-member-id="4">
-                        <span class="member-name">Carson Pugh</span>
-                        <span class="member-role">Developer</span>
-                    </div>
+                    {% empty %}
+                    <p class="no-members">No team members yet.</p>
+                    {% endfor %}
                 </div>
             </div>
 
@@ -251,77 +326,84 @@
         </main>
     </div>
 
+    <div class="modal-overlay" id="teamCodeModal">
+        <div class="modal-content">
+            <h3>Team Code</h3>
+            <p>Share this code with your team members:</p>
+            <div class="team-code" id="teamCodeDisplay"></div>
+            <div class="modal-buttons">
+                <button class="submit-btn" onclick="closeTeamCodeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        document.querySelectorAll('.member').forEach(member => {
-            member.addEventListener('click', function() {
-                document.querySelectorAll('.member').forEach(m => m.classList.remove('active'));
-                this.classList.add('active');
-                
-                const memberDetails = document.querySelector('.member-details');
-                memberDetails.classList.add('active');
-                
-                const memberName = this.querySelector('.member-name').textContent;
-                const activitiesHtml = `
-                    <h3>${memberName}'s Activities</h3>
-                    <div class="member-stats">
-                        <div class="stat-item">
-                            <span class="stat-value">320</span>
-                            <span class="stat-label">Calories Burned</span>
+        document.addEventListener('DOMContentLoaded', function() {
+            const members = document.querySelectorAll('.member');
+            const memberActivities = document.getElementById('memberActivities');
+
+            members.forEach(member => {
+                member.addEventListener('click', function() {
+                    // Remove active class from all members
+                    members.forEach(m => m.classList.remove('active'));
+                    // Add active class to clicked member
+                    this.classList.add('active');
+
+                    const memberId = this.dataset.memberId;
+                    // Here you would typically fetch the member's activities via AJAX
+                    // For now, we'll just show a placeholder
+                    memberActivities.innerHTML = `
+                        <h3>${this.querySelector('.member-name').textContent}'s Activities</h3>
+                        <div class="activities-list">
+                            <p>Loading activities...</p>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-value">6</span>
-                            <span class="stat-label">Activities</span>
-                        </div>
-                    </div>
-                    <div class="activities-list">
-                        <div class="activity">
-                            <span class="activity-name">Morning Run</span>
-                            <span class="activity-stats">150 calories • 30 mins</span>
-                        </div>
-                        <div class="activity">
-                            <span class="activity-name">Evening Workout</span>
-                            <span class="activity-stats">170 calories • 45 mins</span>
-                        </div>
-                        <div class="activity">
-                            <span class="activity-name">Yoga Session</span>
-                            <span class="activity-stats">120 calories • 40 mins</span>
-                        </div>
-                    </div>
-                `;
-                document.getElementById('memberActivities').innerHTML = activitiesHtml;
+                    `;
+                });
             });
-        });
 
-        const navLinks = document.querySelectorAll('.nav-link');
-        const navIndicator = document.querySelector('.nav-indicator');
+            // Handle navigation indicator
+            const navLinks = document.querySelectorAll('.nav-link');
+            const indicator = document.querySelector('.nav-indicator');
 
-        function updateIndicator(link) {
-            navIndicator.style.width = `${link.offsetWidth}px`;
-            navIndicator.style.transform = `translateX(${link.offsetLeft}px)`;
-            navIndicator.style.opacity = '1';
-        }
-
-        // Set initial state
-        navLinks.forEach(link => {
-            // Check if the current URL matches the link's href
-            if (window.location.pathname === link.getAttribute('href')) {
-                updateIndicator(link);
-                link.classList.add('active');
+            function updateIndicator(element) {
+                indicator.style.width = `${element.offsetWidth}px`;
+                indicator.style.transform = `translateX(${element.offsetLeft}px)`;
+                indicator.style.opacity = '1';
             }
 
-            // Add hover effects
-            link.addEventListener('mouseenter', () => {
-                updateIndicator(link);
+            navLinks.forEach(link => {
+                link.addEventListener('mouseenter', () => {
+                    updateIndicator(link);
+                });
+            });
+
+            const navLinksContainer = document.querySelector('.nav-links');
+            navLinksContainer.addEventListener('mouseleave', () => {
+                const activeLink = document.querySelector('.nav-link.active');
+                if (activeLink) {
+                    updateIndicator(activeLink);
+                } else {
+                    indicator.style.opacity = '0';
+                }
             });
         });
 
-        // Reset indicator when mouse leaves the nav
-        document.querySelector('.nav-links').addEventListener('mouseleave', () => {
-            const activeLink = document.querySelector('.nav-link.active');
-            if (activeLink) {
-                updateIndicator(activeLink);
-            } else {
-                navIndicator.style.opacity = '0';
+        function showTeamCode(code) {
+            const modal = document.getElementById('teamCodeModal');
+            const codeDisplay = document.getElementById('teamCodeDisplay');
+            codeDisplay.textContent = code;
+            modal.style.display = 'flex';
+        }
+
+        function closeTeamCodeModal() {
+            const modal = document.getElementById('teamCodeModal');
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('teamCodeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTeamCodeModal();
             }
         });
     </script>

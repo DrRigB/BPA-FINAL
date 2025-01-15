@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div class="cta-buttons">
-                <a href="{% url 'signup' %}" class="cta-button primary">Start Free Trial</a>
+                <a href="{% url 'signup' %}" class="cta-button primary">Try Now</a>
                 <a href="#features" class="cta-button secondary">Learn More</a>
             </div>
         </div>
@@ -77,12 +77,12 @@
 
     <section id="services" class="services">
         <!-- Fitness Tracker box -->
-        <a href="{% url 'activity_list' %}" class="service">
+        <a href="{% url 'login' %}" class="service">
             <h3>Fitness Tracker</h3>
             <p>Track your fitness activities and progress, ensuring you stay motivated and healthy. Monitor your engagement in wellness activities in real-time.</p>
         </a>
         <!-- Health Reminders box -->
-        <a href="{% url 'reminder_list' %}" class="service">
+        <a href="{% url 'login' %}" class="service">
             <h3>Health Reminders</h3>
             <p>Set personalized reminders for water, meals, and physical activity. Stay on track with easy-to-use notifications.</p>
         </a>
@@ -97,11 +97,88 @@
     <section id="contact" class="contact">
         <h2>Contact Us</h2>
         <p>Have questions? We'd love to hear from you. Reach out to us for more information.</p>
-        <a href="mailto:contact@healthhive.com" class="cta-button">Email Us</a>
+        <a href="mailto:healthhive77@gmail.com" class="cta-button">Email Us</a>
     </section>
 
     <footer>
-        <p>&copy; 2024 Health Hive. All rights reserved.</p>
+        <div class="footer-content">
+            <div class="attributions">
+                <h4>Image Credits:</h4>
+                <p class="credit">Logo Elements:</p>
+                <ul>
+                    <li>Honeycomb Icon by <a href="https://canva.com">Canva Creative Studios</a></li>
+                    <li>White Circle Shape by <a href="https://canva.com">Creative Canva Studio</a></li>
+                </ul>
+                <p class="credit">Developed by:</p>
+                <ul>
+                    <li>Rigdon Windsor</li>
+                    <li>Carson Pugh</li>
+                    <li>Brant Simpson</li>
+                    <li>Alyssa Emerson</li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <a href="mailto:healthhive77@gmail.com" class="contact-link">Contact Us</a>
+            </div>
+        </div>
     </footer>
+
+    <style>
+        .footer-content {
+            padding: 2rem;
+            background-color: #f8f9fa;
+            margin-top: 2rem;
+        }
+
+        .attributions {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .attributions h4 {
+            color: #FF8C00;
+            margin-bottom: 1rem;
+        }
+
+        .attributions ul {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 1.5rem 0;
+        }
+
+        .attributions li {
+            margin: 0.3rem 0;
+            color: #666;
+        }
+
+        .attributions a {
+            color: #FF8C00;
+            text-decoration: none;
+        }
+
+        .attributions a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-links {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .contact-link {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #FF8C00;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .contact-link:hover {
+            background-color: #FFB74D;
+        }
+    </style>
 </body>
 </html>
