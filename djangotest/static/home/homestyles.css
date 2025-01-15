@@ -1,0 +1,524 @@
+/* Add this at the top of the file */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+:root {
+    --primary-color: #ff7c00;
+    --primary-hover: #ff9933;
+    --text-color: #333;
+    --bg-color: #f4f4f9;
+    --white: #fff;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --font-size-base: 16px;
+    --spacing-base: 1rem;
+    --border-radius: 5px;
+    --transition-speed: 0.3s;
+}
+
+/* Body Styling */
+body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Arial', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    font-size: var(--font-size-base);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Header Section */
+header {
+    background-color: var(--white);
+    padding: 1rem;
+    box-shadow: 0 2px 5px var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    height: 50px;  /* Adjust this value to make the logo smaller */
+    width: auto;   /* This maintains the aspect ratio */
+    margin-right: 10px;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+nav a {
+    color: var(--text-color);
+    font-size: 1.1em;
+    text-decoration: none;
+    padding: var(--spacing-base) calc(var(--spacing-base) * 2);
+    border-radius: var(--border-radius);
+    transition: background-color var(--transition-speed) ease;
+}
+
+nav a:not(.cta-button) {
+    background-color: transparent;
+    border: 2px solid transparent;
+}
+
+nav a:not(.cta-button):hover {
+    background-color: rgba(255, 87, 34, 0.1);
+}
+
+nav a.cta-button {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+nav a.cta-button:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Remove the old underline animation */
+nav a:not(.cta-button)::after {
+    display: none;
+}
+
+/* Hero Section */
+.hero {
+    position: relative;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-top: -80px; /* Compensate for header height */
+    padding: 80px 20px;
+    overflow: hidden;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #FF5722, #FF9800);
+    z-index: 1;
+}
+
+.gradient-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1));
+    z-index: 2;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    max-width: 1200px;
+    width: 100%;
+}
+
+.hero h2 {
+    font-size: 3.5em;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-subcontent {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    margin: 40px 0;
+}
+
+.for-individuals, .for-businesses {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    flex: 1;
+    max-width: 300px;
+}
+
+.for-individuals h3, .for-businesses h3 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.cta-button.primary {
+    background-color: white;
+    color: #FF5722;
+    padding: 15px 35px;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cta-button.secondary {
+    background-color: transparent;
+    border: 2px solid white;
+    color: white;
+    padding: 15px 35px;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.cta-button.secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.features {
+    padding: 80px 20px;
+    background: white;
+}
+
+.features h2 {
+    text-align: center;
+    margin-bottom: 50px;
+    color: #333;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.feature-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-icon {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.feature-card h3 {
+    color: #FF5722;
+    margin-bottom: 15px;
+}
+
+.feature-card p {
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .hero-subcontent {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .for-individuals, .for-businesses {
+        max-width: 100%;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* Section Styling */
+.about, .services, .contact {
+    padding: 50px 20px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.about h2, .services h2, .contact h2 {
+    font-size: 2.5em;
+    color: #ff7c00;
+}
+
+/* Services Section */
+.services {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.service {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.service:hover {
+    transform: translateY(-5px); /* Add slight lift effect */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.service h3 {
+    font-size: 1.8em;
+    color: #ff7c00;
+    margin-bottom: 1rem;
+}
+
+.service p {
+    font-size: 1.1em;
+    line-height: 1.5;
+}
+
+/* Contact Us Section */
+.contact {
+    padding: 50px 20px;
+    text-align: center;
+    margin-bottom: 50px;  /* Increased margin at the bottom */
+}
+
+.contact h2 {
+    font-size: 2.5em;
+    color: #ff7c00;
+}
+
+.contact p {
+    font-size: 1.2em;
+    margin: 20px 0;
+}
+
+.contact a.cta-button {
+    background-color: #ff7c00;
+    color: white;
+    font-size: 1.2em;
+    padding: 15px 30px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.contact a.cta-button:hover {
+    background-color: #ff9933;
+}
+
+/* Footer Section */
+footer {
+    background-color: #fff;
+    text-align: center;
+    padding: 20px 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+footer p {
+    font-size: 1em;
+    color: #777;
+}
+
+/* Add hamburger menu for mobile */
+.nav-toggle {
+    display: none;
+}
+
+/* Add focus states for accessibility */
+a:focus,
+button:focus {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 3px;
+}
+
+/* Add media queries for responsive design */
+@media screen and (max-width: 768px) {
+    .nav-toggle {
+        display: block;
+        cursor: pointer;
+    }
+
+    nav ul {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: var(--white);
+        padding: 1rem;
+        box-shadow: 0 2px 5px var(--shadow);
+    }
+
+    nav ul.active {
+        display: flex;
+    }
+
+    .hero-content h2 {
+        font-size: 2em;
+    }
+
+    .service {
+        padding: 1rem;
+    }
+}
+
+/* Add print styles */
+@media print {
+    .hero,
+    nav a.cta-button,
+    .contact a.cta-button {
+        background: none;
+        color: var(--text-color);
+    }
+
+    header {
+        box-shadow: none;
+    }
+
+    .service {
+        break-inside: avoid;
+    }
+}
+
+/* Add prefers-reduced-motion media query for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Add dark mode support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #1a1a1a;
+        --text-color: #f4f4f9;
+        --white: #2d2d2d;
+        --shadow: rgba(0, 0, 0, 0.3);
+    }
+
+    .service {
+        background-color: var(--white);
+        color: var(--text-color);
+    }
+}
+/* Add container width constraints */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-base);
+}
+
+/* Optimize animations */
+@media (prefers-reduced-motion: no-preference) {
+    .service {
+        transition: transform var(--transition-speed) ease-out,
+                   box-shadow var(--transition-speed) ease-out;
+    }
+    
+    nav a::after {
+        transition: width var(--transition-speed) ease-out;
+    }
+}
+
+.feature-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.feature-button:hover {
+    background-color: #45a049;
+}
+
+.feature-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+    margin: 10px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Add these styles for the splash effect */
+.splash {
+    position: absolute;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(255,124,0,0.8) 0%, rgba(255,124,0,0) 70%);
+    border-radius: 50%;
+    animation: splash 0.6s ease-out forwards;
+    z-index: 1000;
+}
+
+@keyframes splash {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+/* Make buttons position relative to contain splash */
+.cta-button, .nav-link, .service {
+    position: relative;
+    overflow: hidden;
+}
+
