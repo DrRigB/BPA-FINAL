@@ -1,1 +1,1 @@
-﻿web: cd djangotest && gunicorn mysite.wsgi:application --log-file -
+﻿web: cd djangotest && gunicorn mysite.wsgi:application --log-file - --access-logfile - --error-logfile - --capture-output
