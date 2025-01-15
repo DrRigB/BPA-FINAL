@@ -1,1 +1,0 @@
-web: cd djangotest && gunicorn djangotest.wsgi --log-file - 
