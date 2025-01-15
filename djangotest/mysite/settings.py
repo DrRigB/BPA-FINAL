@@ -129,7 +129,7 @@ STATICFILES_DIRS = [
 ]
 
 # Use WhiteNoise for static files
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
 
 # Media files
 MEDIA_URL = '/media/'
