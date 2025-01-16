@@ -297,7 +297,7 @@
                 </div>
                 <div class="team-members-grid">
                     {% for member in team_members %}
-                    <div class="member" data-member-id="{{ member.user.id }}">
+                    <div class="member" data-member-id="{{ member.user.id }}" data-total-activities="{{ member.total_activities }}" data-total-calories="{{ member.total_calories }}" data-recent-activities="{{ member.activities|join:', ' }}">
                         <span class="member-name">{{ member.user.username }}</span>
                         <span class="member-role">{{ member.role }}</span>
                         <div class="member-stats">
@@ -368,7 +368,10 @@
             const memberActivities = document.getElementById('memberActivities');
 
             members.forEach(member => {
-                member.addEventListener('click', function() {
+                member.addEventListener('click', function(e) {
+                    // Prevent event from bubbling up
+                    e.stopPropagation();
+                    
                     document.querySelectorAll('.member').forEach(m => m.classList.remove('active'));
                     this.classList.add('active');
                     
@@ -378,99 +381,52 @@
                     // Get data from the clicked member card
                     const memberName = this.querySelector('.member-name').textContent;
                     const memberRole = this.querySelector('.member-role').textContent;
-                    const totalCalories = this.querySelector('.stat-value').textContent;
-                    const totalActivities = this.querySelectorAll('.stat-value')[1].textContent;
-                    const recentActivities = this.querySelector('.recent-activities').innerHTML;
+                    const totalActivities = this.getAttribute('data-total-activities') || '0';
+                    const totalCalories = this.getAttribute('data-total-calories') || '0';
+                    const recentActivities = this.getAttribute('data-recent-activities') || 'No recent activities';
                     
-                    // Update the member details section with the actual data
                     const activitiesHtml = `
-                        <h3>${memberName}'s Activities</h3>
+                        <div class="member-header">
+                            <h3>${memberName}</h3>
+                            <span class="member-role">${memberRole}</span>
+                        </div>
                         <div class="member-stats">
-                            <div class="stat-item">
+                            <div class="stat">
+                                <span class="stat-value">${totalActivities}</span>
+                                <span class="stat-label">Total Activities</span>
+                            </div>
+                            <div class="stat">
                                 <span class="stat-value">${totalCalories}</span>
                                 <span class="stat-label">Calories Burned</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-value">${totalActivities}</span>
-                                <span class="stat-label">Activities</span>
                             </div>
                         </div>
                         <div class="activities-list">
                             ${recentActivities}
                         </div>
                     `;
-                    document.getElementById('memberActivities').innerHTML = activitiesHtml;
+                    memberActivities.innerHTML = activitiesHtml;
                 });
-            });
-
-            // Handle navigation indicator
-            const navLinks = document.querySelectorAll('.nav-link');
-            const indicator = document.querySelector('.nav-indicator');
-
-            function updateIndicator(element) {
-                indicator.style.width = `${element.offsetWidth}px`;
-                indicator.style.transform = `translateX(${element.offsetLeft}px)`;
-                indicator.style.opacity = '1';
-            }
-
-            navLinks.forEach(link => {
-                link.addEventListener('mouseenter', () => {
-                    updateIndicator(link);
-                });
-            });
-
-            const navLinksContainer = document.querySelector('.nav-links');
-            navLinksContainer.addEventListener('mouseleave', () => {
-                const activeLink = document.querySelector('.nav-link.active');
-                if (activeLink) {
-                    updateIndicator(activeLink);
-                }
             });
         });
 
-        function showTeamCode(code) {
-            const modalOverlay = document.createElement('div');
-            modalOverlay.className = 'modal-overlay';
-            modalOverlay.innerHTML = `
-                <div class="modal-content">
-                    <h3>Team Code</h3>
-                    <p>Share this code with others to let them join your team:</p>
-                    <div class="team-code">${code}</div>
-                    <div class="modal-buttons">
-                        <button class="cancel-btn" onclick="closeTeamCodeModal()">Close</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modalOverlay);
+        function showTeamCode() {
+            const teamCodeModal = document.getElementById('teamCodeModal');
+            teamCodeModal.style.display = 'flex';
         }
 
         function showLeaveTeamConfirmation() {
-            const modalOverlay = document.createElement('div');
-            modalOverlay.className = 'modal-overlay';
-            modalOverlay.innerHTML = `
-                <div class="modal-content">
-                    <h3>Leave Team</h3>
-                    <p>Are you sure you want to leave this team?</p>
-                    <div class="modal-buttons">
-                        <button class="delete-btn" onclick="leaveTeam()">Leave Team</button>
-                        <button class="cancel-btn" onclick="closeLeaveTeamModal()">Cancel</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modalOverlay);
+            const leaveTeamModal = document.getElementById('leaveTeamModal');
+            leaveTeamModal.style.display = 'flex';
         }
 
         function closeTeamCodeModal() {
-            document.querySelector('.modal-overlay').remove();
+            const teamCodeModal = document.getElementById('teamCodeModal');
+            teamCodeModal.style.display = 'none';
         }
 
         function closeLeaveTeamModal() {
-            document.querySelector('.modal-overlay').remove();
-        }
-
-        function leaveTeam() {
-            const teamId = new URLSearchParams(window.location.search).get('team_id');
-            window.location.href = `/accounts/leave-team/${teamId}/`;
+            const leaveTeamModal = document.getElementById('leaveTeamModal');
+            leaveTeamModal.style.display = 'none';
         }
     </script>
 </body>
