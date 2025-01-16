@@ -227,13 +227,14 @@ def team_dashboard(request):
         
         for membership in memberships:
             member = membership.user
-            member_activities = Activity.objects.filter(user=member).order_by('-date')[:5]
+            member_activities = Activity.objects.filter(user=member).order_by('-date')
             total_calories = sum(a.calories_burned for a in member_activities if a.calories_burned)
+            recent_activities = member_activities[:5]
             
             team_members.append({
                 'user': member,
                 'role': membership.get_role_display(),
-                'activities': member_activities,
+                'activities': recent_activities,
                 'total_calories': total_calories,
                 'total_activities': member_activities.count()
             })

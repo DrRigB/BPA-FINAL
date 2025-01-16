@@ -13,17 +13,16 @@
         }
 
         .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
             padding: 2rem;
-            height: calc(100vh - 200px);
+            background-color: #f8f9fa;
         }
 
         .team-dashboard-content {
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: 1fr;
             gap: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-            height: 100%;
         }
 
         .team-section {
@@ -31,31 +30,66 @@
             border-radius: 15px;
             padding: 2rem;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            height: 100%;
-            max-height: 700px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
         }
 
         .team-header {
             margin-bottom: 2rem;
-            flex-shrink: 0;
+        }
+
+        .team-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .team-title {
+            font-size: 2rem;
+            color: #333;
+            margin: 0;
+        }
+
+        .team-actions {
+            display: flex;
+            gap: 1rem;
         }
 
         .team-header-stats {
-            display: flex;
-            gap: 2rem;
-            margin: 1.5rem 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            transition: transform 0.2s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff7c00;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1rem;
         }
 
         .team-members-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
-            flex-grow: 1;
-            overflow-y: auto;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
         }
 
         .member {
@@ -65,6 +99,7 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             border: 1px solid #eee;
+            cursor: pointer;
         }
 
         .member:hover {
@@ -73,23 +108,7 @@
         }
 
         .member.active {
-            background: #ff7c00;
-            color: white;
-        }
-
-        .member-details {
-            display: block;
-            height: 100%;
-        }
-
-        .member-details.active {
-            display: block;
-        }
-
-        @media (max-width: 768px) {
-            .team-dashboard-content {
-                grid-template-columns: 1fr;
-            }
+            border-color: #ff7c00;
         }
 
         .member-name {
@@ -109,61 +128,24 @@
             margin-bottom: 1rem;
         }
 
-        .member-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin: 1rem 0;
-            padding: 1rem 0;
-            border-top: 1px solid #eee;
-            border-bottom: 1px solid #eee;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 0.8rem;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
-
-        .stat-value {
-            display: block;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #ff7c00;
-            margin-bottom: 0.3rem;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
         .recent-activities {
-            margin-top: 1rem;
-        }
-
-        .recent-activities h4 {
-            color: #333;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
+            margin-top: 1.5rem;
         }
 
         .activity {
-            padding: 0.8rem;
             background: #f8f9fa;
+            padding: 1rem;
             border-radius: 8px;
             margin-bottom: 0.8rem;
-            transition: transform 0.2s ease;
         }
 
-        .activity:hover {
-            transform: translateY(-2px);
+        .activity:last-child {
+            margin-bottom: 0;
         }
 
         .activity-name {
             display: block;
-            font-weight: 600;
+            font-weight: 500;
             color: #333;
             margin-bottom: 0.3rem;
         }
@@ -175,21 +157,13 @@
 
         .no-activities {
             color: #666;
-            font-style: italic;
             text-align: center;
             padding: 1rem;
             background: #f8f9fa;
             border-radius: 8px;
         }
 
-        .modal-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 1.5rem;
-        }
-
-        .delete-btn, .cancel-btn {
+        .view-code-btn, .exit-btn {
             padding: 0.8rem 1.5rem;
             border: none;
             border-radius: 5px;
@@ -198,32 +172,33 @@
             transition: all 0.2s ease;
         }
 
-        .delete-btn {
-            background: #dc3545;
+        .view-code-btn {
+            background: #ff7c00;
             color: white;
         }
 
-        .cancel-btn {
+        .exit-btn {
             background: #e9ecef;
             color: #495057;
+            text-decoration: none;
         }
 
-        .delete-btn:hover {
-            background: #c82333;
+        .view-code-btn:hover {
+            background: #ff6b00;
         }
 
-        .cancel-btn:hover {
+        .exit-btn:hover {
             background: #dee2e6;
         }
 
         .modal-overlay {
-            display: none;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            right: 0;
+            bottom: 0;
             background: rgba(0, 0, 0, 0.5);
+            display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
@@ -232,20 +207,42 @@
         .modal-content {
             background: white;
             padding: 2rem;
-            border-radius: 10px;
-            max-width: 400px;
+            border-radius: 15px;
+            max-width: 500px;
             width: 90%;
-            text-align: center;
+            animation: modalFadeIn 0.3s ease;
         }
 
-        .team-code {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 5px;
-            margin: 1rem 0;
-            font-size: 1.5rem;
-            font-weight: bold;
-            letter-spacing: 2px;
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+
+            .team-members-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .team-header-top {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .team-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
         }
     </style>
 </head>
@@ -366,20 +363,37 @@
 
             members.forEach(member => {
                 member.addEventListener('click', function() {
-                    // Remove active class from all members
-                    members.forEach(m => m.classList.remove('active'));
-                    // Add active class to clicked member
+                    document.querySelectorAll('.member').forEach(m => m.classList.remove('active'));
                     this.classList.add('active');
-
-                    const memberId = this.dataset.memberId;
-                    // Here you would typically fetch the member's activities via AJAX
-                    // For now, we'll just show a placeholder
-                    memberActivities.innerHTML = `
-                        <h3>${this.querySelector('.member-name').textContent}'s Activities</h3>
+                    
+                    const memberDetails = document.querySelector('.member-details');
+                    memberDetails.classList.add('active');
+                    
+                    // Get data from the clicked member card
+                    const memberName = this.querySelector('.member-name').textContent;
+                    const memberRole = this.querySelector('.member-role').textContent;
+                    const totalCalories = this.querySelector('.stat-value').textContent;
+                    const totalActivities = this.querySelectorAll('.stat-value')[1].textContent;
+                    const recentActivities = this.querySelector('.recent-activities').innerHTML;
+                    
+                    // Update the member details section with the actual data
+                    const activitiesHtml = `
+                        <h3>${memberName}'s Activities</h3>
+                        <div class="member-stats">
+                            <div class="stat-item">
+                                <span class="stat-value">${totalCalories}</span>
+                                <span class="stat-label">Calories Burned</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">${totalActivities}</span>
+                                <span class="stat-label">Activities</span>
+                            </div>
+                        </div>
                         <div class="activities-list">
-                            <p>Loading activities...</p>
+                            ${recentActivities}
                         </div>
                     `;
+                    document.getElementById('memberActivities').innerHTML = activitiesHtml;
                 });
             });
 
@@ -404,47 +418,54 @@
                 const activeLink = document.querySelector('.nav-link.active');
                 if (activeLink) {
                     updateIndicator(activeLink);
-                } else {
-                    indicator.style.opacity = '0';
                 }
             });
         });
 
         function showTeamCode(code) {
-            const modal = document.getElementById('teamCodeModal');
-            const codeDisplay = document.getElementById('teamCodeDisplay');
-            codeDisplay.textContent = code;
-            modal.style.display = 'flex';
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'modal-overlay';
+            modalOverlay.innerHTML = `
+                <div class="modal-content">
+                    <h3>Team Code</h3>
+                    <p>Share this code with others to let them join your team:</p>
+                    <div class="team-code">${code}</div>
+                    <div class="modal-buttons">
+                        <button class="cancel-btn" onclick="closeTeamCodeModal()">Close</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modalOverlay);
+        }
+
+        function showLeaveTeamConfirmation() {
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'modal-overlay';
+            modalOverlay.innerHTML = `
+                <div class="modal-content">
+                    <h3>Leave Team</h3>
+                    <p>Are you sure you want to leave this team?</p>
+                    <div class="modal-buttons">
+                        <button class="delete-btn" onclick="leaveTeam()">Leave Team</button>
+                        <button class="cancel-btn" onclick="closeLeaveTeamModal()">Cancel</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modalOverlay);
         }
 
         function closeTeamCodeModal() {
-            const modal = document.getElementById('teamCodeModal');
-            modal.style.display = 'none';
-        }
-
-        // Close modal when clicking outside
-        document.getElementById('teamCodeModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeTeamCodeModal();
-            }
-        });
-
-        function showLeaveTeamConfirmation() {
-            const modal = document.getElementById('leaveTeamModal');
-            modal.style.display = 'flex';
+            document.querySelector('.modal-overlay').remove();
         }
 
         function closeLeaveTeamModal() {
-            const modal = document.getElementById('leaveTeamModal');
-            modal.style.display = 'none';
+            document.querySelector('.modal-overlay').remove();
         }
 
-        // Close leave team modal when clicking outside
-        document.getElementById('leaveTeamModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeLeaveTeamModal();
-            }
-        });
+        function leaveTeam() {
+            const teamId = new URLSearchParams(window.location.search).get('team_id');
+            window.location.href = `/accounts/leave-team/${teamId}/`;
+        }
     </script>
 </body>
 </html> 
