@@ -42,24 +42,22 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 80px;
 }
 
 .logo {
     display: flex;
     align-items: center;
-    max-width: 200px;
     position: relative;
-    z-index: 1001;
+    width: 80px;
 }
 
 .logo-img {
-    max-height: 200px !important;
-    margin-top: 100px;
-    width: auto !important;
-    margin-right: 10px;
     position: absolute;
-    top: -50px;
+    max-height: 150px !important;
+    width: auto !important;
+    top: -20px;
+    left: 0;
+    z-index: 1001;
 }
 
 nav {
