@@ -44,20 +44,18 @@ header {
     align-items: center;
 }
 
+/* NINJA NINJA */
 .logo {
     display: flex;
     align-items: center;
-    position: relative;
-    width: 80px;
+    max-width: 200px;
 }
 
 .logo-img {
-    position: absolute;
-    max-height: 150px !important;
+    max-height: 200px !important;
+    margin-top: 100px;
     width: auto !important;
-    top: -20px;
-    left: 0;
-    z-index: 1001;
+    margin-right: 10px;
 }
 
 nav {
