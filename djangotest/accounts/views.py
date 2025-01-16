@@ -354,8 +354,14 @@ Best regards,
 The HealthHive Team'''
 
             try:
-                print(f"Attempting to send email to {email}")  # Debug log
-                print(f"Using email settings: {settings.EMAIL_HOST_USER}")  # Debug log
+                print(f"DEBUG: Starting email send process")
+                print(f"DEBUG: Email settings:")
+                print(f"DEBUG: HOST: {settings.EMAIL_HOST}")
+                print(f"DEBUG: PORT: {settings.EMAIL_PORT}")
+                print(f"DEBUG: USER: {settings.EMAIL_HOST_USER}")
+                print(f"DEBUG: TLS: {settings.EMAIL_USE_TLS}")
+                print(f"DEBUG: SSL: {settings.EMAIL_USE_SSL}")
+                
                 send_mail(
                     subject,
                     message,
@@ -363,13 +369,17 @@ The HealthHive Team'''
                     [user.email],
                     fail_silently=False,
                 )
-                print("Email sent successfully")  # Debug log
+                print("DEBUG: Email sent successfully")
                 messages.success(request, 'Verification code has been sent to your email.')
                 # Store email in session for verification
                 request.session['reset_email'] = email
                 return redirect('verify_code')
             except Exception as e:
-                print(f"Email sending error: {str(e)}")  # Debug log
+                print(f"DEBUG: Email sending error details:")
+                print(f"DEBUG: Error type: {type(e).__name__}")
+                print(f"DEBUG: Error message: {str(e)}")
+                print(f"DEBUG: Error args: {e.args}")
+                
                 if 'smtp' in str(e).lower():
                     messages.error(request, f'Error with email service: {str(e)}')
                 else:
