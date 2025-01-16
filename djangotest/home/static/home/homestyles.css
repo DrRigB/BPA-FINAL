@@ -48,14 +48,16 @@ header {
 /* Logo Styling */
 .logo {
     display: inline-block;
-    position: relative;
-    z-index: 1001;
+    width: auto;
+    height: 60px;
+    overflow: visible;
 }
 
 .logo-img {
-    width: 250px;
+    width: 300px;
     height: auto;
-    transform: translateY(-30px);
+    margin-top: -50px;
+    margin-left: -50px;
 }
 
 nav {
@@ -409,8 +411,9 @@ nav a.cta-button:hover {
     }
     
     .logo-img {
-        width: 180px;
-        transform: translateY(-20px);
+        width: 200px;
+        margin-top: -30px;
+        margin-left: -30px;
     }
 }
 
