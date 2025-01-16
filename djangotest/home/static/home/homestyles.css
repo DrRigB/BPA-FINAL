@@ -43,24 +43,24 @@ header {
     justify-content: space-between;
     align-items: center;
     height: 60px;
-    overflow: visible;
 }
 
 /* Logo Styling */
 .logo {
+    display: inline-block;
     position: relative;
     width: 80px;
     height: 60px;
-    overflow: visible;
 }
 
 .logo-img {
     position: absolute;
-    width: 350px;
+    width: 300px;
     height: auto;
-    top: -40px;
-    left: -70px;
+    top: -30px;
+    left: -110px;
     z-index: 1001;
+    transition: transform 0.3s ease;
 }
 
 nav {
@@ -414,27 +414,26 @@ nav a.cta-button:hover {
     }
     
     .logo-img {
-        width: 250px;
-        top: -30px;
-        left: -50px;
+        width: 200px;
+        top: -20px;
+        left: -60px;
     }
 }
 
 /* Credits Section */
 .credits {
-    text-align: center;
-    padding: 20px;
-    background-color: #f5f5f5;
-    margin-top: 50px;
+    padding: 40px 20px;
+    background-color: #f8f9fa;
+    margin-top: 0;
 }
 
 .credits-content {
-    max-width: 1000px;
-    background-color: #fff;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
     border-radius: 15px;
-    padding: 30px;
+    padding: 40px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    margin: 30px auto;
 }
 
 .credits-content h3 {
@@ -447,23 +446,19 @@ nav a.cta-button:hover {
 
 .credits-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
-    padding: 25px;
-    background-color: #f8f9fa;
-    border-radius: 12px;
+    padding: 20px;
 }
 
 .credits-item {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 15px;
-    align-items: center;
+    background-color: #f8f9fa;
     padding: 15px;
-    background-color: white;
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: transform 0.2s ease;
 }
 
 .credits-item:hover {
@@ -472,16 +467,24 @@ nav a.cta-button:hover {
 }
 
 .emoji {
-    font-size: 2.2em;
-    grid-row: span 2;
-    display: flex;
-    align-items: center;
+    font-size: 2em;
+    min-width: 40px;
+    text-align: center;
 }
 
 .unicode {
     font-family: monospace;
     color: #666;
-    font-size: 0.85em;
-    grid-column: 2;
+    font-size: 0.9em;
+}
+
+@media (max-width: 768px) {
+    .credits-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .credits-content {
+        padding: 20px;
+    }
 }
 
