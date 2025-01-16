@@ -28,23 +28,23 @@
             <div class="dashboard-grid">
                 <!-- First Row -->
                 <div class="dashboard-card stats-card">
-                    <h3>Quick Stats</h3>
+                    <h3>📊 Quick Stats</h3>
                     <div class="stats-grid">
                         <div class="stat-item">
                             <span class="stat-value">{{ activities_count }}</span>
-                            <span class="stat-label">Total Activities</span>
+                            <span class="stat-label">🎯 Total Activities</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-value">{{ total_calories }}</span>
-                            <span class="stat-label">Calories Burned</span>
+                            <span class="stat-label">🔥 Calories Burned</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-value">{{ avg_heart_rate }}</span>
-                            <span class="stat-label">Avg Heart Rate (bpm)</span>
+                            <span class="stat-label">❤️ Avg Heart Rate (bpm)</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-value">{{ total_duration }}</span>
-                            <span class="stat-label">Total Minutes</span>
+                            <span class="stat-label">⏱️ Total Minutes</span>
                         </div>
                     </div>
                     <a href="{% url 'activity_list' %}" class="card-link">View All Activities</a>
@@ -53,10 +53,10 @@
                 <!-- Teams Card -->
                 <div class="dashboard-card teams-card">
                     <div class="card-header">
-                        <h3>Your Teams</h3>
+                        <h3>👥 Your Teams</h3>
                         <div class="team-buttons">
-                            <button class="join-team-btn">Join Team</button>
-                            <button class="create-team-btn">+ Create Team</button>
+                            <button class="join-team-btn">🤝 Join Team</button>
+                            <button class="create-team-btn">✨ Create Team</button>
                         </div>
                     </div>
                     <div id="teamsContainer">
@@ -67,8 +67,8 @@
                 <!-- Reminders Card -->
                 <div class="dashboard-card reminders-card">
                     <div class="card-header">
-                        <h3>Recent Reminders</h3>
-                        <a href="{% url 'add_reminder' %}" class="create-reminder-btn">+ Add Reminder</a>
+                        <h3>⏰ Recent Reminders</h3>
+                        <a href="{% url 'add_reminder' %}" class="create-reminder-btn">✨ Add Reminder</a>
                     </div>
                     <div class="reminders-preview">
                         {% for reminder in recent_reminders %}
@@ -92,12 +92,12 @@
 
                 <!-- Second Row -->
                 <div class="dashboard-card">
-                    <h3>Calories Burned Over Time</h3>
+                    <h3>📈 Calories Burned Over Time</h3>
                     <canvas id="caloriesChart"></canvas>
                 </div>
 
                 <div class="dashboard-card">
-                    <h3>Recent Activities</h3>
+                    <h3>🏃‍♂️ Recent Activities</h3>
                     <ul class="recent-activities-list">
                         {% for activity in recent_activities %}
                         <li class="activity-item">
@@ -118,7 +118,7 @@
 
                 <!-- Third Row -->
                 <div class="dashboard-card chart-container">
-                    <h3>Activity Distribution</h3>
+                    <h3>📊 Activity Distribution</h3>
                     <div class="pie-chart-wrapper">
                         <canvas id="activityPieChart"></canvas>
                     </div>
@@ -127,8 +127,8 @@
                 <!-- Add this inside the dashboard-grid div, after your existing cards -->
                 <div class="dashboard-card badges-preview">
                     <div class="card-header">
-                        <h3>Recent Badges</h3>
-                        <a href="{% url 'badges' %}" class="view-all-btn">View All Badges</a>
+                        <h3>🏆 Recent Badges</h3>
+                        <a href="{% url 'badges' %}" class="view-all-btn">👀 View All Badges</a>
                     </div>
                     <div class="badges-preview-grid">
                         {% for badge in personal_badges|slice:":3" %}

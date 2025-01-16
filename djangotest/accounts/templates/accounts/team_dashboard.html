@@ -266,13 +266,11 @@
             <div class="team-section">
                 <div class="team-header">
                     <div class="team-header-top">
-                        <h2 class="team-title">{{ team.name }}</h2>
+                        <h1 class="team-title">👥 {{ team.name }}</h1>
                         <div class="team-actions">
-                            {% if team.leader == user %}
-                            <button class="view-code-btn" onclick="showTeamCode('{{ team.code }}')">View Team Code</button>
-                            {% endif %}
-                            <button class="exit-btn" onclick="showLeaveTeamConfirmation()">Leave Team</button>
-                            <a href="{% url 'dashboard' %}" class="exit-btn">Exit Team</a>
+                            <button onclick="showTeamCode()" class="view-code-btn">🔑 View Team Code</button>
+                            <button onclick="showLeaveTeamConfirmation()" class="exit-btn">🚪 Leave Team</button>
+                            <a href="{% url 'dashboard' %}" class="exit-btn">🏠 Back to Dashboard</a>
                         </div>
                     </div>
                     {% if team.organization %}
@@ -280,12 +278,20 @@
                     {% endif %}
                     <div class="team-header-stats">
                         <div class="stat-item">
-                            <span class="stat-value">{{ total_calories }}</span>
-                            <span class="stat-label">Total Team Calories</span>
+                            <span class="stat-value">{{ total_activities }}</span>
+                            <span class="stat-label">🎯 Total Activities</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-value">{{ total_activities }}</span>
-                            <span class="stat-label">Team Activities</span>
+                            <span class="stat-value">{{ total_calories }}</span>
+                            <span class="stat-label">🔥 Total Calories</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">{{ member_count }}</span>
+                            <span class="stat-label">👥 Team Members</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">{{ avg_activities_per_member }}</span>
+                            <span class="stat-label">📊 Avg Activities/Member</span>
                         </div>
                     </div>
                 </div>
