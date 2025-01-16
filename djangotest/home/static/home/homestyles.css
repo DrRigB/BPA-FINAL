@@ -42,20 +42,24 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 60px;
 }
 
 /* NINJA NINJA */
 .logo {
     display: flex;
     align-items: center;
-    max-width: 200px;
+    width: 80px;
+    position: relative;
 }
 
 .logo-img {
+    position: absolute;
     max-height: 200px !important;
-    margin-top: 100px;
     width: auto !important;
-    margin-right: 10px;
+    top: -50px;
+    left: 0;
+    z-index: 1001;
 }
 
 nav {
@@ -400,14 +404,12 @@ nav a.cta-button:hover {
 
 @media screen and (max-width: 1000px) {
     .logo {
-        max-width: 100px;
+        width: 60px;
     }
     
     .logo-img {
         max-height: 100px !important;
-        margin-top: 10px;
-        width: auto !important;
-        margin-right: 10px;
+        top: -20px;
     }
 }
 
