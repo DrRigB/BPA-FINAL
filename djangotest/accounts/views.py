@@ -27,6 +27,7 @@ from .models import VerificationCode
 from .models import Team, TeamMembership
 import random
 import string
+from django.conf import settings
 
 def signup(request):
     if request.method == 'POST':
@@ -354,11 +355,11 @@ The HealthHive Team'''
 
             try:
                 print(f"Attempting to send email to {email}")  # Debug log
-                print(f"Using email settings: {os.getenv('EMAIL_HOST_USER')}")  # Debug log
+                print(f"Using email settings: {settings.EMAIL_HOST_USER}")  # Debug log
                 send_mail(
                     subject,
                     message,
-                    os.getenv('EMAIL_HOST_USER', 'healthhive77@gmail.com'),
+                    settings.EMAIL_HOST_USER,
                     [user.email],
                     fail_silently=False,
                 )
