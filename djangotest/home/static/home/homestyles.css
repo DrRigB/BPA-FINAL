@@ -45,6 +45,14 @@ header {
     height: 60px;
 }
 
+nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    position: relative;
+    width: 100%;
+}
+
 /* Logo Styling */
 .logo {
     display: inline-block;
@@ -54,15 +62,16 @@ header {
 }
 
 .logo-img {
-    position: relative;
+    position: absolute;
     width: 350px;
     height: auto;
-    transform: translateY(-30px);
+    top: -40px;
+    left: -20px;
     z-index: 1001;
-    transition: transform 0.3s ease;
 }
 
-nav {
+.nav-links {
+    margin-left: auto;
     display: flex;
     align-items: center;
     gap: 2rem;
@@ -414,7 +423,8 @@ nav a.cta-button:hover {
     
     .logo-img {
         width: 250px;
-        transform: translateY(-20px);
+        top: -30px;
+        left: -10px;
     }
 }
 
