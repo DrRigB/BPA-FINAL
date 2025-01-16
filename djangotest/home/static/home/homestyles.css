@@ -42,24 +42,18 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 60px;
 }
 
 /* NINJA NINJA */
 .logo {
     display: flex;
     align-items: center;
-    width: 80px;
-    position: relative;
 }
 
 .logo-img {
-    position: absolute;
     max-height: 200px !important;
     width: auto !important;
-    top: -50px;
-    left: 0;
-    z-index: 1001;
+    transform: translateY(-50px);
 }
 
 nav {
@@ -409,7 +403,7 @@ nav a.cta-button:hover {
     
     .logo-img {
         max-height: 100px !important;
-        top: -20px;
+        transform: translateY(-20px);
     }
 }
 
