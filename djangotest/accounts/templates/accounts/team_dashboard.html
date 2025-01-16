@@ -10,13 +10,21 @@
     <style>
         * {
             font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
         }
 
         .dashboard-container {
             max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-            background-color: #f8f9fa;
+            margin: 2rem auto;
+            padding: 0 2rem;
         }
 
         .team-dashboard-content {
@@ -27,26 +35,33 @@
 
         .team-section {
             background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
 
         .team-header {
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
         }
 
         .team-header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
         }
 
         .team-title {
-            font-size: 2rem;
-            color: #333;
+            font-size: 2.5rem;
+            color: #1a1a1a;
             margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .team-title span {
+            font-size: 3rem;
         }
 
         .team-actions {
@@ -56,55 +71,97 @@
 
         .team-header-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1.5rem;
-            margin-top: 1.5rem;
+            margin-top: 2rem;
         }
 
         .stat-item {
+            padding: 2rem;
+            background: linear-gradient(145deg, #ffffff, #f5f5f5);
+            border-radius: 16px;
             text-align: center;
-            padding: 1.5rem;
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            transition: transform 0.2s ease;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #ff7c00;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .stat-item:hover {
             transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-item:hover::before {
+            opacity: 1;
         }
 
         .stat-value {
             display: block;
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: bold;
-            color: #ff7c00;
+            background: linear-gradient(45deg, #ff7c00, #ff9f4d);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 0.5rem;
         }
 
         .stat-label {
             color: #666;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            font-weight: 500;
         }
 
         .team-members-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
         }
 
         .member {
             background: white;
-            padding: 1.5rem;
-            border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
-            border: 1px solid #eee;
+            border: 2px solid transparent;
             cursor: pointer;
+            position: relative;
+        }
+
+        .member::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 20px;
+            background: linear-gradient(145deg, rgba(255, 124, 0, 0.1), rgba(255, 159, 77, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
         }
 
         .member:hover {
             transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .member:hover::after {
+            opacity: 1;
         }
 
         .member.active {
@@ -112,31 +169,54 @@
         }
 
         .member-name {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: 600;
-            color: #333;
-            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+            margin-bottom: 0.8rem;
+            display: block;
         }
 
         .member-role {
             display: inline-block;
-            padding: 0.3rem 0.8rem;
-            background: #ff7c00;
+            padding: 0.4rem 1rem;
+            background: linear-gradient(45deg, #ff7c00, #ff9f4d);
             color: white;
             border-radius: 20px;
             font-size: 0.9rem;
-            margin-bottom: 1rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+
+        .member-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 12px;
         }
 
         .recent-activities {
             margin-top: 1.5rem;
         }
 
+        .recent-activities h4 {
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
         .activity {
             background: #f8f9fa;
             padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 0.8rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            transition: transform 0.2s ease;
+        }
+
+        .activity:hover {
+            transform: translateX(5px);
         }
 
         .activity:last-child {
@@ -145,50 +225,64 @@
 
         .activity-name {
             display: block;
-            font-weight: 500;
-            color: #333;
+            font-weight: 600;
+            color: #1a1a1a;
             margin-bottom: 0.3rem;
         }
 
         .activity-stats {
             font-size: 0.9rem;
             color: #666;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .activity-stats span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
         }
 
         .no-activities {
             color: #666;
             text-align: center;
-            padding: 1rem;
+            padding: 1.5rem;
             background: #f8f9fa;
-            border-radius: 8px;
+            border-radius: 12px;
+            font-style: italic;
         }
 
         .view-code-btn, .exit-btn {
             padding: 0.8rem 1.5rem;
             border: none;
-            border-radius: 5px;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: 500;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .view-code-btn {
-            background: #ff7c00;
+            background: linear-gradient(45deg, #ff7c00, #ff9f4d);
             color: white;
         }
 
         .exit-btn {
-            background: #e9ecef;
-            color: #495057;
+            background: #f0f0f0;
+            color: #333;
             text-decoration: none;
         }
 
         .view-code-btn:hover {
-            background: #ff6b00;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 124, 0, 0.3);
         }
 
         .exit-btn:hover {
-            background: #dee2e6;
+            background: #e5e5e5;
+            transform: translateY(-2px);
         }
 
         .modal-overlay {
@@ -197,7 +291,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -206,17 +301,18 @@
 
         .modal-content {
             background: white;
-            padding: 2rem;
-            border-radius: 15px;
+            padding: 2.5rem;
+            border-radius: 20px;
             max-width: 500px;
             width: 90%;
             animation: modalFadeIn 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
 
         @keyframes modalFadeIn {
             from {
                 opacity: 0;
-                transform: translateY(-20px);
+                transform: translateY(-30px);
             }
             to {
                 opacity: 1;
@@ -227,6 +323,11 @@
         @media (max-width: 768px) {
             .dashboard-container {
                 padding: 1rem;
+                margin: 1rem auto;
+            }
+
+            .team-section {
+                padding: 1.5rem;
             }
 
             .team-members-grid {
@@ -236,12 +337,21 @@
             .team-header-top {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 1rem;
+                gap: 1.5rem;
             }
 
             .team-actions {
                 width: 100%;
-                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .team-title {
+                font-size: 2rem;
+            }
+
+            .stat-item {
+                padding: 1.5rem;
             }
         }
     </style>
@@ -266,7 +376,7 @@
             <div class="team-section">
                 <div class="team-header">
                     <div class="team-header-top">
-                        <h1 class="team-title">👥 {{ team.name }}</h1>
+                        <h1 class="team-title"><span>👥</span> {{ team.name }}</h1>
                         <div class="team-actions">
                             <button onclick="showTeamCode()" class="view-code-btn">🔑 View Team Code</button>
                             <button onclick="showLeaveTeamConfirmation()" class="exit-btn">🚪 Leave Team</button>
@@ -297,17 +407,17 @@
                 </div>
                 <div class="team-members-grid">
                     {% for member in team_members %}
-                    <div class="member" data-member-id="{{ member.user.id }}" data-total-activities="{{ member.total_activities }}" data-total-calories="{{ member.total_calories }}" data-recent-activities="{{ member.activities|join:', ' }}">
+                    <div class="member" data-member-id="{{ member.user.id }}">
                         <span class="member-name">{{ member.user.username }}</span>
                         <span class="member-role">{{ member.role }}</span>
                         <div class="member-stats">
                             <div class="stat-item">
                                 <span class="stat-value">{{ member.total_calories }}</span>
-                                <span class="stat-label">Calories Burned</span>
+                                <span class="stat-label">🔥 Calories</span>
                             </div>
                             <div class="stat-item">
                                 <span class="stat-value">{{ member.total_activities }}</span>
-                                <span class="stat-label">Activities</span>
+                                <span class="stat-label">🎯 Activities</span>
                             </div>
                         </div>
                         <div class="recent-activities">
@@ -315,7 +425,10 @@
                             {% for activity in member.activities %}
                             <div class="activity">
                                 <span class="activity-name">{{ activity.name }}</span>
-                                <span class="activity-stats">{{ activity.calories_burned }} cal • {{ activity.duration_minutes }} min</span>
+                                <div class="activity-stats">
+                                    <span>🔥 {{ activity.calories_burned }} cal</span>
+                                    <span>⏱️ {{ activity.duration_minutes }} min</span>
+                                </div>
                             </div>
                             {% empty %}
                             <p class="no-activities">No recent activities</p>
@@ -327,16 +440,10 @@
                     {% endfor %}
                 </div>
             </div>
-
-            <div class="team-section member-details" id="memberActivities">
-                <div class="no-member-selected">
-                    <p>Select a team member to view their activities</p>
-                </div>
-            </div>
         </main>
     </div>
 
-    <div class="modal-overlay" id="teamCodeModal">
+    <div class="modal-overlay" id="teamCodeModal" style="display: none;">
         <div class="modal-content">
             <h3>Team Code</h3>
             <p>Share this code with your team members:</p>
@@ -347,8 +454,7 @@
         </div>
     </div>
 
-    <!-- Leave Team Confirmation Modal -->
-    <div class="modal-overlay" id="leaveTeamModal">
+    <div class="modal-overlay" id="leaveTeamModal" style="display: none;">
         <div class="modal-content">
             <h3>Leave Team</h3>
             <p>Are you sure you want to leave this team? This action cannot be undone.</p>
@@ -365,38 +471,13 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const members = document.querySelectorAll('.member');
-            const memberActivities = document.getElementById('memberActivities');
             const teamCodeModal = document.getElementById('teamCodeModal');
             const leaveTeamModal = document.getElementById('leaveTeamModal');
 
-            // Hide modals initially
-            teamCodeModal.style.display = 'none';
-            leaveTeamModal.style.display = 'none';
-
             members.forEach(member => {
-                member.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    // Remove active class from all members
+                member.addEventListener('click', function() {
                     members.forEach(m => m.classList.remove('active'));
                     this.classList.add('active');
-
-                    // Get member details
-                    const memberName = this.querySelector('.member-name').textContent;
-                    const memberRole = this.querySelector('.member-role').textContent;
-                    const activities = this.querySelector('.recent-activities').innerHTML;
-
-                    // Update member details section
-                    memberActivities.innerHTML = `
-                        <div class="member-header">
-                            <h3>${memberName}</h3>
-                            <span class="member-role">${memberRole}</span>
-                        </div>
-                        <div class="recent-activities">
-                            ${activities}
-                        </div>
-                    `;
                 });
             });
         });
@@ -419,6 +500,18 @@
         function closeLeaveTeamModal() {
             const modal = document.getElementById('leaveTeamModal');
             modal.style.display = 'none';
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const teamCodeModal = document.getElementById('teamCodeModal');
+            const leaveTeamModal = document.getElementById('leaveTeamModal');
+            if (event.target === teamCodeModal) {
+                teamCodeModal.style.display = 'none';
+            }
+            if (event.target === leaveTeamModal) {
+                leaveTeamModal.style.display = 'none';
+            }
         }
     </script>
 </body>
