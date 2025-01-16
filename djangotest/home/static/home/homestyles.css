@@ -42,12 +42,15 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 80px;
 }
 
 .logo {
     display: flex;
     align-items: center;
     max-width: 200px;
+    position: relative;
+    z-index: 1001;
 }
 
 .logo-img {
@@ -55,6 +58,8 @@ header {
     margin-top: 100px;
     width: auto !important;
     margin-right: 10px;
+    position: absolute;
+    top: -50px;
 }
 
 nav {
@@ -408,5 +413,24 @@ nav a.cta-button:hover {
         width: auto !important;
         margin-right: 10px;
     }
+}
+
+/* Add credits at the bottom */
+.credits {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.8em;
+    color: #666;
+    background-color: #f5f5f5;
+    margin-top: 50px;
+}
+
+.credits a {
+    color: #FF5722;
+    text-decoration: none;
+}
+
+.credits a:hover {
+    text-decoration: underline;
 }
 

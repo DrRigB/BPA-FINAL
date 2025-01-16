@@ -221,8 +221,22 @@ def team_dashboard(request):
             messages.error(request, 'You are not a member of this team')
             return redirect('dashboard')
             
-        # Get team members with their roles
-        team_members = TeamMembership.objects.filter(team=team).select_related('user')
+        # Get team members with their roles and activities
+        team_members = []
+        memberships = TeamMembership.objects.filter(team=team).select_related('user')
+        
+        for membership in memberships:
+            member = membership.user
+            member_activities = Activity.objects.filter(user=member).order_by('-date')[:5]
+            total_calories = sum(a.calories_burned for a in member_activities if a.calories_burned)
+            
+            team_members.append({
+                'user': member,
+                'role': membership.get_role_display(),
+                'activities': member_activities,
+                'total_calories': total_calories,
+                'total_activities': member_activities.count()
+            })
         
         # Get team statistics
         team_activities = Activity.objects.filter(user__teammembership__team=team)
@@ -338,23 +352,26 @@ Best regards,
 The HealthHive Team'''
 
             try:
+                print(f"Attempting to send email to {email}")  # Debug log
+                print(f"Using email settings: {os.getenv('EMAIL_HOST_USER')}")  # Debug log
                 send_mail(
                     subject,
                     message,
-                    os.getenv('EMAIL_HOST_USER'),
+                    os.getenv('EMAIL_HOST_USER', 'healthhive77@gmail.com'),
                     [user.email],
                     fail_silently=False,
                 )
+                print("Email sent successfully")  # Debug log
                 messages.success(request, 'Verification code has been sent to your email.')
                 # Store email in session for verification
                 request.session['reset_email'] = email
                 return redirect('verify_code')
             except Exception as e:
-                print(f"Email sending error: {str(e)}")  # Debug logging
+                print(f"Email sending error: {str(e)}")  # Debug log
                 if 'smtp' in str(e).lower():
-                    messages.error(request, 'Error with email service. Please try again later or contact support.')
+                    messages.error(request, f'Error with email service: {str(e)}')
                 else:
-                    messages.error(request, 'Error sending email. Please try again.')
+                    messages.error(request, f'Error sending email: {str(e)}')
                 return render(request, 'accounts/password_reset.html')
                 
         except CustomUser.DoesNotExist:
@@ -522,3 +539,39 @@ def get_user_teams(request):
         
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+@login_required
+def leave_team(request, team_id):
+    if request.method == 'POST':
+        try:
+            team = Team.objects.get(id=team_id)
+            membership = TeamMembership.objects.get(user=request.user, team=team)
+            
+            # Check if user is the team leader
+            if membership.role == 'LEADER':
+                # If there are other members, assign leadership to another member
+                other_member = TeamMembership.objects.filter(team=team).exclude(user=request.user).first()
+                if other_member:
+                    other_member.role = 'LEADER'
+                    other_member.save()
+                    team.leader = other_member.user
+                    team.save()
+                else:
+                    # If no other members, delete the team
+                    team.delete()
+                    messages.success(request, 'Team has been deleted as you were the last member.')
+                    return redirect('dashboard')
+            
+            # Remove user from team
+            membership.delete()
+            messages.success(request, f'You have successfully left {team.name}.')
+            return redirect('dashboard')
+            
+        except Team.DoesNotExist:
+            messages.error(request, 'Team not found.')
+        except TeamMembership.DoesNotExist:
+            messages.error(request, 'You are not a member of this team.')
+        except Exception as e:
+            messages.error(request, f'An error occurred: {str(e)}')
+    
+    return redirect('dashboard')

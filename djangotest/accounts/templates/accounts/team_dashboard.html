@@ -59,17 +59,17 @@
         }
 
         .member {
-            background: #f5f5f5;
-            padding: 1rem;
-            border-radius: 10px;
-            cursor: pointer;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
+            border: 1px solid #eee;
         }
 
         .member:hover {
-            background: #ff7c00;
-            color: white;
-            transform: translateY(-2px);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
         }
 
         .member.active {
@@ -92,54 +92,68 @@
             }
         }
 
-        .stat-item {
-            text-align: center;
-            padding: 1rem;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-        }
-
-        .stat-item .stat-value {
-            display: block;
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #ff7c00;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-item .stat-label {
-            color: #666;
-            font-size: 0.9em;
-        }
-
         .member-name {
-            display: block;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            color: inherit;
+            color: #333;
             margin-bottom: 0.5rem;
         }
 
         .member-role {
-            display: block;
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: #ff7c00;
+            color: white;
+            border-radius: 20px;
             font-size: 0.9rem;
-            color: inherit;
-            opacity: 0.8;
+            margin-bottom: 1rem;
         }
 
-        .activities-list {
+        .member-stats {
             display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 1rem;
-            margin-top: 1.5rem;
+            margin: 1rem 0;
+            padding: 1rem 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 0.8rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff7c00;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .recent-activities {
+            margin-top: 1rem;
+        }
+
+        .recent-activities h4 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
         }
 
         .activity {
+            padding: 0.8rem;
             background: #f8f9fa;
-            padding: 1.2rem;
             border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            margin-bottom: 0.8rem;
             transition: transform 0.2s ease;
         }
 
@@ -148,86 +162,57 @@
         }
 
         .activity-name {
+            display: block;
             font-weight: 600;
             color: #333;
+            margin-bottom: 0.3rem;
         }
 
         .activity-stats {
-            color: #666;
             font-size: 0.9rem;
+            color: #666;
         }
 
-        .member-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin: 1.5rem 0;
+        .no-activities {
+            color: #666;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
         }
 
-        .nav-indicator {
-            position: absolute;
-            bottom: 0;
-            height: 3px;
-            background-color: #ff7c00;
-            transition: all 0.3s ease;
-            border-radius: 3px;
-        }
-
-        .nav-links {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .nav-link {
-            color: inherit;
-            text-decoration: none;
-            padding: 1rem 0;
-            position: relative;
-        }
-
-        .nav-link.active {
-            color: #ff7c00;
-        }
-
-        .team-header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .team-actions {
+        .modal-buttons {
             display: flex;
             gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
         }
 
-        .view-code-btn, .exit-btn {
-            padding: 0.5rem 1rem;
+        .delete-btn, .cancel-btn {
+            padding: 0.8rem 1.5rem;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-weight: 500;
             transition: all 0.2s ease;
-            text-decoration: none;
         }
 
-        .view-code-btn {
-            background: #ff7c00;
+        .delete-btn {
+            background: #dc3545;
             color: white;
         }
 
-        .exit-btn {
+        .cancel-btn {
             background: #e9ecef;
             color: #495057;
         }
 
-        .view-code-btn:hover {
-            background: #ff8c00;
+        .delete-btn:hover {
+            background: #c82333;
         }
 
-        .exit-btn:hover {
+        .cancel-btn:hover {
             background: #dee2e6;
         }
 
@@ -289,6 +274,7 @@
                             {% if team.leader == user %}
                             <button class="view-code-btn" onclick="showTeamCode('{{ team.code }}')">View Team Code</button>
                             {% endif %}
+                            <button class="exit-btn" onclick="showLeaveTeamConfirmation()">Leave Team</button>
                             <a href="{% url 'dashboard' %}" class="exit-btn">Exit Team</a>
                         </div>
                     </div>
@@ -307,10 +293,31 @@
                     </div>
                 </div>
                 <div class="team-members-grid">
-                    {% for membership in team_members %}
-                    <div class="member" data-member-id="{{ membership.user.id }}">
-                        <span class="member-name">{{ membership.user.username }}</span>
-                        <span class="member-role">{{ membership.get_role_display }}</span>
+                    {% for member in team_members %}
+                    <div class="member" data-member-id="{{ member.user.id }}">
+                        <span class="member-name">{{ member.user.username }}</span>
+                        <span class="member-role">{{ member.role }}</span>
+                        <div class="member-stats">
+                            <div class="stat-item">
+                                <span class="stat-value">{{ member.total_calories }}</span>
+                                <span class="stat-label">Calories Burned</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">{{ member.total_activities }}</span>
+                                <span class="stat-label">Activities</span>
+                            </div>
+                        </div>
+                        <div class="recent-activities">
+                            <h4>Recent Activities</h4>
+                            {% for activity in member.activities %}
+                            <div class="activity">
+                                <span class="activity-name">{{ activity.name }}</span>
+                                <span class="activity-stats">{{ activity.calories_burned }} cal • {{ activity.duration_minutes }} min</span>
+                            </div>
+                            {% empty %}
+                            <p class="no-activities">No recent activities</p>
+                            {% endfor %}
+                        </div>
                     </div>
                     {% empty %}
                     <p class="no-members">No team members yet.</p>
@@ -333,6 +340,21 @@
             <div class="team-code" id="teamCodeDisplay"></div>
             <div class="modal-buttons">
                 <button class="submit-btn" onclick="closeTeamCodeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leave Team Confirmation Modal -->
+    <div class="modal-overlay" id="leaveTeamModal">
+        <div class="modal-content">
+            <h3>Leave Team</h3>
+            <p>Are you sure you want to leave this team? This action cannot be undone.</p>
+            <div class="modal-buttons">
+                <form method="POST" action="{% url 'leave_team' team.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-btn">Yes, Leave Team</button>
+                    <button type="button" class="cancel-btn" onclick="closeLeaveTeamModal()">Cancel</button>
+                </form>
             </div>
         </div>
     </div>
@@ -404,6 +426,23 @@
         document.getElementById('teamCodeModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeTeamCodeModal();
+            }
+        });
+
+        function showLeaveTeamConfirmation() {
+            const modal = document.getElementById('leaveTeamModal');
+            modal.style.display = 'flex';
+        }
+
+        function closeLeaveTeamModal() {
+            const modal = document.getElementById('leaveTeamModal');
+            modal.style.display = 'none';
+        }
+
+        // Close leave team modal when clicking outside
+        document.getElementById('leaveTeamModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLeaveTeamModal();
             }
         });
     </script>
