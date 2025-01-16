@@ -42,23 +42,22 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 80px;
 }
 
 /* Logo Styling */
 .logo {
-    display: inline-block;
     position: relative;
-    width: auto;
-    height: 0;
+    width: 80px;
     z-index: 1001;
 }
 
 .logo-img {
     position: absolute;
-    max-height: 200px;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
+    width: 300px;
+    max-height: none;
+    top: -40px;
+    left: -110px;
     transition: all 0.3s ease;
 }
 
@@ -413,8 +412,9 @@ nav a.cta-button:hover {
     }
     
     .logo-img {
-        max-height: 100px;
-        top: -15px;
+        width: 200px;
+        top: -20px;
+        left: -60px;
     }
 }
 
