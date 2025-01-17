@@ -79,12 +79,12 @@ body {
 }
 
 .btn-primary {
-    background-color: #4CAF50;
+    background-color: #FF5722;
     color: white;
 }
 
 .btn-primary:hover {
-    background-color: #45a049;
+    background-color: #FF5722;
 }
 
 /* Alert styles */
