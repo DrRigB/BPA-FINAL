@@ -1,5 +1,6 @@
 # Environment variables
 .env
+.venv
 
 # Python
 __pycache__/
@@ -22,6 +23,8 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+*.pyo
+*.pyd
 
 # Django
 *.log
@@ -60,4 +63,4 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *.cover
-.hypothesis/ 
+.hypothesis/

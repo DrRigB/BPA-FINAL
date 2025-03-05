@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Health Hive</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'accounts/dashboard.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <img src="{% static 'home/HEALTH_HIVE__2.png' %}" alt="Health Hive Logo" class="logo-img">
+            <div class="nav-links">
+                <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Dashboard</a>
+                <a href="{% url 'activity_list' %}" class="nav-link {% if request.resolver_match.url_name == 'activity_list' %}active{% endif %}">Activity Tracker</a>
+                <a href="{% url 'reminder_list' %}" class="nav-link {% if request.resolver_match.url_name == 'reminder_list' %}active{% endif %}">Reminders</a>
+                <div class="nav-indicator"></div>
+                <span class="username">Welcome, {{ user.username }}!</span>
+                <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <main class="dashboard-content">
+            <div class="dashboard-grid">
+                <!-- First Row -->
+                <div class="dashboard-card stats-card">
+                    <h3>📊 Quick Stats</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-value">{{ activities_count }}</span>
+                            <span class="stat-label">🎯 Total Activities</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">{{ total_calories }}</span>
+                            <span class="stat-label">🔥 Calories Burned</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">{{ avg_heart_rate }}</span>
+                            <span class="stat-label">❤️ Avg Heart Rate (bpm)</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">{{ total_duration }}</span>
+                            <span class="stat-label">⏱️ Total Minutes</span>
+                        </div>
+                    </div>
+                    <a href="{% url 'activity_list' %}" class="card-link">View All Activities</a>
+                </div>
+
+                <!-- Teams Card -->
+                <div class="dashboard-card teams-card">
+                    <div class="card-header">
+                        <h3>👥 Your Teams</h3>
+                        <div class="team-buttons">
+                            <button class="join-team-btn">🤝 Join Team</button>
+                            <button class="create-team-btn">✨ Create Team</button>
+                        </div>
+                    </div>
+                    <div id="teamsContainer">
+                        <!-- Teams will be loaded here dynamically -->
+                    </div>
+                </div>
+
+                <!-- Reminders Card -->
+                <div class="dashboard-card reminders-card">
+                    <div class="card-header">
+                        <h3>⏰ Recent Reminders</h3>
+                        <a href="{% url 'add_reminder' %}" class="create-reminder-btn">✨ Add Reminder</a>
+                    </div>
+                    <div class="reminders-preview">
+                        {% for reminder in recent_reminders %}
+                        <div class="reminder-item {% if reminder.is_completed %}completed{% endif %}">
+                            <div class="reminder-info">
+                                <h4>{{ reminder.title }}</h4>
+                                <p>{{ reminder.time|time:"g:i A" }} - {{ reminder.get_frequency_display }}</p>
+                            </div>
+                            <form method="post" action="{% url 'toggle_reminder' reminder.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="toggle-status-btn">
+                                    {% if reminder.is_completed %}✓{% else %}○{% endif %}
+                                </button>
+                            </form>
+                        </div>
+                        {% empty %}
+                        <p class="no-data">No reminders set. Add one to get started!</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Second Row -->
+                <div class="dashboard-card">
+                    <h3>📈 Calories Burned Over Time</h3>
+                    <canvas id="caloriesChart"></canvas>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>🏃‍♂️ Recent Activities</h3>
+                    <ul class="recent-activities-list">
+                        {% for activity in recent_activities %}
+                        <li class="activity-item">
+                            <div class="activity-header">
+                                <span class="activity-name">{{ activity.name }}</span>
+                                <span class="activity-date">{{ activity.date|date:"M d, Y" }}</span>
+                            </div>
+                            <div class="activity-details">
+                                <span>Calories: {{ activity.calories_burned }}</span>
+                                <span>Duration: {{ activity.duration_minutes }}min</span>
+                            </div>
+                        </li>
+                        {% empty %}
+                        <li>No activities recorded yet</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Third Row -->
+                <div class="dashboard-card chart-container">
+                    <h3>📊 Activity Distribution</h3>
+                    <div class="pie-chart-wrapper">
+                        <canvas id="activityPieChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Add this inside the dashboard-grid div, after your existing cards -->
+                <div class="dashboard-card badges-preview">
+                    <div class="card-header">
+                        <h3>🏆 Recent Badges</h3>
+                        <a href="{% url 'badges' %}" class="view-all-btn">👀 View All Badges</a>
+                    </div>
+                    <div class="badges-preview-grid">
+                        {% for badge in personal_badges|slice:":3" %}
+                        <div class="badge-card-small {% if badge.locked %}locked{% endif %}">
+                            <div class="badge-icon">
+                                {% if badge.locked %}🔒{% else %}🏆{% endif %}
+                            </div>
+                            <h4>{{ badge.name }}</h4>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Parse the Django template variables
+            const chartData = {
+                dates: JSON.parse('{{ dates|safe }}'),
+                calories: JSON.parse('{{ calories_data|safe }}'),
+                types: JSON.parse('{{ activity_types|safe }}'),
+                counts: JSON.parse('{{ activity_counts|safe }}')
+            };
+
+            // Create Calories Chart
+            if (chartData.dates.length > 0) {
+                const caloriesChart = new Chart(
+                    document.getElementById('caloriesChart').getContext('2d'),
+                    {
+                        type: 'line',
+                        data: {
+                            labels: chartData.dates,
+                            datasets: [{
+                                label: 'Calories Burned',
+                                data: chartData.calories,
+                                borderColor: '#FF5722',
+                                tension: 0.1,
+                                fill: false
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Calories'
+                                    }
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Date'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                );
+            }
+
+            // Create Activity Distribution Chart
+            if (chartData.types.length > 0) {
+                const pieChart = new Chart(
+                    document.getElementById('activityPieChart').getContext('2d'),
+                    {
+                        type: 'pie',
+                        data: {
+                            labels: chartData.types,
+                            datasets: [{
+                                data: chartData.counts,
+                                backgroundColor: [
+                                    '#FF5722',
+                                    '#FF9800',
+                                    '#FFC107',
+                                    '#FFEB3B',
+                                    '#CDDC39'
+                                ]
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            aspectRatio: 1,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        boxWidth: 12,
+                                        padding: 15
+                                    }
+                                }
+                            }
+                        }
+                    }
+                );
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const indicator = document.querySelector('.nav-indicator');
+            let activeLink = document.querySelector('.nav-link.active');
+
+            function updateIndicator(element) {
+                indicator.style.width = `${element.offsetWidth}px`;
+                indicator.style.transform = `translateX(${element.offsetLeft}px)`;
+                indicator.style.opacity = '1';
+            }
+
+            // Set initial position
+            if (activeLink) {
+                updateIndicator(activeLink);
+            }
+
+            // Handle hover events
+            navLinks.forEach(link => {
+                link.addEventListener('mouseenter', () => {
+                    updateIndicator(link);
+                });
+            });
+
+            // Return to active link position when leaving navigation area
+            const navLinksContainer = document.querySelector('.nav-links');
+            navLinksContainer.addEventListener('mouseleave', () => {
+                if (activeLink) {
+                    updateIndicator(activeLink);
+                } else {
+                    indicator.style.opacity = '0';
+                }
+            });
+        });
+    </script>
+
+    <div class="modal-overlay" id="createTeamModal">
+        <div class="modal-content">
+            <h3>Create New Team</h3>
+            <form id="createTeamForm">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="teamName">Team Name*</label>
+                    <input type="text" id="teamName" name="teamName" required>
+                </div>
+                <div class="form-group">
+                    <label for="organization">Organization</label>
+                    <input type="text" id="organization" name="organization">
+                </div>
+                <div class="form-group">
+                    <label for="teamLeader">Team Leader*</label>
+                    <input type="text" id="teamLeader" value="{{ user.username }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="teamDescription">Team Description</label>
+                    <textarea id="teamDescription" name="teamDescription" rows="3"></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="submit-btn">Create Team</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="teamCodeModal">
+        <div class="modal-content">
+            <h3>Team Created Successfully!</h3>
+            <p>Share this code with your team members:</p>
+            <div class="team-code">
+                <span id="generatedCode">ABC123</span>
+                <button id="copyCode" class="copy-btn">Copy</button>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" class="submit-btn" id="doneBtn">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="joinTeamModal">
+        <div class="modal-content">
+            <h3>Join a Team</h3>
+            <form id="joinTeamForm">
+                <div class="form-group">
+                    <label for="teamCode">Enter Team Code*</label>
+                    <input type="text" id="teamCode" required maxlength="6" placeholder="Enter 6-digit code">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="submit-btn">Join Team</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Wait for the DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load user's teams
+            loadUserTeams();
+
+            // Get button elements
+            const createTeamBtn = document.querySelector('.create-team-btn');
+            const joinTeamBtn = document.querySelector('.join-team-btn');
+            const createTeamModal = document.getElementById('createTeamModal');
+            const joinTeamModal = document.getElementById('joinTeamModal');
+            const teamCodeModal = document.getElementById('teamCodeModal');
+            const cancelBtns = document.querySelectorAll('.cancel-btn');
+
+            // Function to load user's teams
+            function loadUserTeams() {
+                fetch('/accounts/get-user-teams/')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const teamsContainer = document.getElementById('teamsContainer');
+                            teamsContainer.innerHTML = ''; // Clear existing teams
+                            
+                            if (data.teams.length === 0) {
+                                teamsContainer.innerHTML = '<p class="no-teams">No teams yet. Create or join a team to get started!</p>';
+                                return;
+                            }
+                            
+                            data.teams.forEach(team => {
+                                const teamCard = document.createElement('div');
+                                teamCard.className = 'team-card';
+                                teamCard.innerHTML = `
+                                    <a href="/accounts/team-dashboard/?team_id=${team.id}" class="team-link">
+                                        <div class="team-info">
+                                            <h4>${team.name}</h4>
+                                            <p>${team.memberCount} members</p>
+                                            ${team.organization ? `<p class="organization">${team.organization}</p>` : ''}
+                                            <span class="role-badge ${team.isLeader ? 'leader' : 'member'}">${team.role}</span>
+                                        </div>
+                                    </a>
+                                `;
+                                teamsContainer.appendChild(teamCard);
+                            });
+                        } else {
+                            console.error('Error loading teams:', data.error);
+                        }
+                    })
+                    .catch(error => console.error('Error loading teams:', error));
+            }
+
+            // Function to show modal
+            function showModal(modal) {
+                if (modal) {
+                    modal.style.display = 'flex';
+                }
+            }
+
+            // Function to close all modals
+            function closeAllModals() {
+                [createTeamModal, joinTeamModal, teamCodeModal].forEach(modal => {
+                    if (modal) modal.style.display = 'none';
+                });
+            }
+
+            // Add click listeners to buttons
+            if (createTeamBtn) {
+                createTeamBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showModal(createTeamModal);
+                });
+            }
+
+            if (joinTeamBtn) {
+                joinTeamBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showModal(joinTeamModal);
+                });
+            }
+
+            // Handle create team form submission
+            const createTeamForm = document.getElementById('createTeamForm');
+            if (createTeamForm) {
+                createTeamForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(this);
+                    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                    fetch('/accounts/create-team/', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': csrfToken
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const codeElement = document.getElementById('generatedCode');
+                            if (codeElement) codeElement.textContent = data.code;
+                            createTeamForm.reset();
+                            closeAllModals();
+                            showModal(teamCodeModal);
+                            loadUserTeams(); // Reload teams list
+                        } else {
+                            alert(data.error || 'Error creating team');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error creating team');
+                    });
+                });
+            }
+
+            // Handle join team form submission
+            const joinTeamForm = document.getElementById('joinTeamForm');
+            if (joinTeamForm) {
+                joinTeamForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData();
+                    formData.append('teamCode', document.getElementById('teamCode').value);
+
+                    fetch('/accounts/join-team/', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            closeAllModals();
+                            loadUserTeams(); // Reload teams list
+                            alert('Successfully joined the team!');
+                        } else {
+                            alert(data.error || 'Error joining team');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error joining team');
+                    });
+                });
+            }
+
+            // Add click listeners to cancel buttons
+            cancelBtns.forEach(btn => {
+                btn.addEventListener('click', closeAllModals);
+            });
+
+            // Close modal when clicking outside
+            [createTeamModal, joinTeamModal, teamCodeModal].forEach(modal => {
+                if (modal) {
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) closeAllModals();
+                    });
+                }
+            });
+
+            // Add click listener for Done button
+            const doneBtn = document.getElementById('doneBtn');
+            if (doneBtn) {
+                doneBtn.addEventListener('click', closeAllModals);
+            }
+
+            // Add back the copy code functionality
+            const copyBtn = document.getElementById('copyCode');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', function() {
+                    const code = document.getElementById('generatedCode').textContent;
+                    navigator.clipboard.writeText(code);
+                    this.textContent = 'Copied!';
+                    setTimeout(() => this.textContent = 'Copy', 2000);
+                });
+            }
+        });
+    </script>
+
+    <style>
+        .teams-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .team-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-link {
+            display: block;
+            padding: 1rem;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .team-info h4 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .team-info p {
+            margin: 0.25rem 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .organization {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        .role-badge.leader {
+            background: #ff7c00;
+            color: white;
+        }
+
+        .role-badge.member {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .no-teams {
+            text-align: center;
+            color: #666;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .team-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .create-team-btn,
+        .join-team-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        }
+
+        .create-team-btn {
+            background: #ff7c00;
+            color: white;
+        }
+
+        .join-team-btn {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .create-team-btn:hover {
+            background: #ff8c00;
+        }
+
+        .join-team-btn:hover {
+            background: #dee2e6;
+        }
+    </style>
+
+    <div class="chat-assistant">
+        <div class="chat-bubble" id="chatBubble">
+            <span style="font-size: 24px;">💬</span>
+        </div>
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <h4>Health Hive Assistant</h4>
+                <button class="close-chat" id="closeChat">×</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be added here dynamically -->
+            </div>
+            <div class="chat-input">
+                <input type="text" placeholder="Ask me anything..." id="chatInput">
+                <button id="sendMessage">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatBubble = document.getElementById('chatBubble');
+            const chatWindow = document.getElementById('chatWindow');
+            const closeChat = document.getElementById('closeChat');
+            const chatInput = document.getElementById('chatInput');
+            const sendMessage = document.getElementById('sendMessage');
+            const chatMessages = document.getElementById('chatMessages');
+
+            // Initial welcome message
+            const welcomeMessage = "👋 Hi! I'm your Health Hive assistant. I can help you navigate the website and make the most of your wellness journey. What would you like to know?";
+            addMessage(welcomeMessage, 'assistant');
+
+            chatBubble.addEventListener('click', () => {
+                chatWindow.classList.add('active');
+            });
+
+            closeChat.addEventListener('click', () => {
+                chatWindow.classList.remove('active');
+            });
+
+            function addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.style.marginBottom = '10px';
+                messageDiv.style.padding = '8px 12px';
+                messageDiv.style.borderRadius = '8px';
+                messageDiv.style.maxWidth = '80%';
+                
+                if (sender === 'user') {
+                    messageDiv.style.marginLeft = 'auto';
+                    messageDiv.style.backgroundColor = '#FF5722';
+                    messageDiv.style.color = 'white';
+                } else {
+                    messageDiv.style.backgroundColor = '#f0f0f0';
+                    messageDiv.style.color = '#333';
+                }
+                
+                messageDiv.textContent = text;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function handleUserMessage(message) {
+                // Show typing indicator
+                const typingIndicator = addMessage("Thinking...", 'assistant');
+                
+                // Create FormData
+                const formData = new FormData();
+                formData.append('message', message);
+                
+                // Get CSRF token
+                const csrftoken = getCookie('csrftoken');
+                
+                // Send message to backend
+                fetch('/accounts/chat/', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Remove typing indicator
+                    if (typingIndicator) {
+                        chatMessages.removeChild(typingIndicator);
+                    }
+                    
+                    // Add the AI response
+                    if (data.response) {
+                        addMessage(data.response, 'assistant');
+                    } else if (data.error) {
+                        console.error('Error:', data.error);
+                        addMessage("Sorry, I encountered an error. Please try again.", 'assistant');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    if (typingIndicator) {
+                        chatMessages.removeChild(typingIndicator);
+                    }
+                    addMessage("Sorry, I'm having trouble connecting. Please try again.", 'assistant');
+                });
+            }
+
+            sendMessage.addEventListener('click', () => {
+                const message = chatInput.value.trim();
+                if (message) {
+                    addMessage(message, 'user');
+                    handleUserMessage(message);
+                    chatInput.value = '';
+                }
+            });
+
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage.click();
+                }
+            });
+        });
+    </script>
+
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
+</html>

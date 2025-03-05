@@ -1,0 +1,412 @@
+/* Add this at the top of the file */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+:root {
+    --primary-color: #ff7c00;
+    --primary-hover: #ff9933;
+    --text-color: #333;
+    --bg-color: #f4f4f9;
+    --white: #fff;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --font-size-base: 16px;
+    --spacing-base: 1rem;
+    --border-radius: 5px;
+    --transition-speed: 0.3s;
+}
+
+/* Body Styling */
+body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Arial', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    font-size: var(--font-size-base);
+}
+
+/* Header Section */
+header {
+    background-color: var(--white);
+    padding: 1rem;
+    box-shadow: 0 2px 5px var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    max-width: 200px;
+}
+
+.logo-img {
+    max-height: 200px !important;
+    margin-top: 100px;
+    width: auto !important;
+    margin-right: 10px;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+nav a {
+    color: var(--text-color);
+    font-size: 1.1em;
+    text-decoration: none;
+    padding: var(--spacing-base) calc(var(--spacing-base) * 2);
+    border-radius: var(--border-radius);
+    transition: background-color var(--transition-speed) ease;
+}
+
+nav a:not(.cta-button) {
+    background-color: transparent;
+    border: 2px solid transparent;
+}
+
+nav a:not(.cta-button):hover {
+    background-color: rgba(255, 87, 34, 0.1);
+}
+
+nav a.cta-button {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+nav a.cta-button:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Hero Section */
+.hero {
+    position: relative;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-top: -80px;
+    padding: 80px 20px;
+    overflow: hidden;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #FF5722, #FF9800);
+    background-image: url("hiverun.jpg");
+    background-size: cover;
+    z-index: 1;
+}
+
+.gradient-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1));
+    z-index: 2;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    max-width: 1200px;
+    width: 100%;
+}
+
+.hero h2 {
+    font-size: 3.5em;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-subcontent {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    margin: 40px 0;
+}
+
+.for-individuals, .for-businesses {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    flex: 1;
+    max-width: 300px;
+}
+
+.for-individuals h3, .for-businesses h3 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.cta-button.primary {
+    background-color: white;
+    color: #FF5722;
+    padding: 15px 35px;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cta-button.secondary {
+    background-color: transparent;
+    border: 2px solid white;
+    color: white;
+    padding: 15px 35px;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.cta-button.secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* About Section */
+.about {
+    padding: 4rem 2rem;
+    background-color: var(--bg-color);
+    text-align: center;
+}
+
+.about h2 {
+    font-size: 2.5em;
+    margin-bottom: 3rem;
+    color: var(--text-color);
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.about-card {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px var(--shadow);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #eee;
+}
+
+.about-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.about-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+}
+
+.about-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.about-card p {
+    color: var(--text-color);
+    line-height: 1.6;
+    font-size: 1.1rem;
+}
+
+/* Features Section */
+.features {
+    padding: 4rem 2rem;
+    background-color: var(--white);
+}
+
+.features h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: var(--text-color);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.feature-card {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px var(--shadow);
+    text-align: center;
+    margin: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #eee;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+}
+
+.feature-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.feature-card p {
+    color: var(--text-color);
+    line-height: 1.6;
+    font-size: 1.1rem;
+}
+
+/* Services Section */
+.services {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.service {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.service:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.service h3 {
+    font-size: 1.8em;
+    color: #ff7c00;
+    margin-bottom: 1rem;
+}
+
+.service p {
+    font-size: 1.1em;
+    line-height: 1.5;
+}
+
+/* Contact Section */
+.contact {
+    padding: 4rem 2rem;
+    background-color: var(--bg-color);
+    text-align: center;
+}
+
+.contact h2 {
+    font-size: 2.5em;
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+}
+
+.contact p {
+    color: var(--text-color);
+    margin-bottom: 2rem;
+    font-size: 1.2rem;
+}
+
+.contact .cta-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background-color: var(--primary-color);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+}
+
+.contact .cta-button:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .hero-subcontent {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .for-individuals, .for-businesses {
+        max-width: 100%;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .logo {
+        max-width: 100px;
+    }
+    
+    .logo-img {
+        max-height: 100px !important;
+        margin-top: 10px;
+        width: auto !important;
+        margin-right: 10px;
+    }
+}
+

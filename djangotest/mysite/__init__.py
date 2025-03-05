@@ -1,0 +1,1 @@
+# PostgreSQL is configured in settings.py
