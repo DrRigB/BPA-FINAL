@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Hive - Your Health Journey</title>
+    {% load static %}
+    <link rel="icon" type="image/png" href="https://382vpmmuuk.ufs.sh/f/nWx63JABEdhSBE8bYT5ECG5rdkZOeQgDq8uSBWz7VnNvYcTH">
+    <link rel="stylesheet" href="{% static 'home/homestyles.css' %}?v=1.6">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<!-- Header Section -->
+<header>
+    <div class="header-container">
+        <div class="logo-container">
+            <img src="https://382vpmmuuk.ufs.sh/f/nWx63JABEdhSBE8bYT5ECG5rdkZOeQgDq8uSBWz7VnNvYcTH" alt="Health Hive Logo" class="nav-logo">
+            <div class="dropdown">
+                <span class="nav-title">HEALTH HIVE</span>
+                <div class="dropdown-content">
+                    <a href="{% url 'homepage' %}#about">About</a>
+                    <a href="{% url 'credits' %}">Credits</a>
+                </div>
+            </div>
+        </div>
+        <div class="nav-auth">
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}" class="cta-button">Profile</a>
+                <a href="{% url 'logout' %}" class="cta-button">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="cta-button">Login</a>
+                <a href="{% url 'signup' %}" class="cta-button sign-up">Sign Up</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-overlay"></div>
+    
+    <div class="hero-content">
+        <h1>Transform your health journey</h1>
+        
+        <div class="app-showcase">
+            <div class="app-screen">
+                <div class="hexagon-icon">
+                    <img src="{% static 'home/images/person-icon.svg' %}" alt="Individual Icon" class="icon-img person-icon">
+                </div>
+                <h3>FOR INDIVIDUALS</h3>
+                <p>Track your daily health metrics, set goals, and celebrate your achievements with personalized insights.</p>
+                <a href="{% url 'signup' %}" class="app-button">Get Started</a>
+            </div>
+            
+            <div class="app-screen central">
+                <div class="hexagon-grid">
+                    <img src="https://382vpmmuuk.ufs.sh/f/nWx63JABEdhSC1SjiTOgbRkw2dBInPxcAXLKC8aWJmYTqjSs" alt="Health Hive Logo" width="80">
+                </div>
+                <h3>JOIN THE HIVE</h3>
+                <p>Connect with others who share your passion for health and wellness. Build a community that supports your journey.</p>
+                <a href="#about" class="app-button">Learn More</a>
+            </div>
+            
+            <div class="app-screen">
+                <div class="hexagon-icon">
+                    <img src="{% static 'home/images/people-icon.svg' %}" alt="Team Icon" class="icon-img">
+                </div>
+                <h3>FOR TEAMS</h3>
+                <p>Collaborate with your team, share progress, and stay motivated together with group challenges.</p>
+                <a href="{% url 'signup' %}" class="app-button">Team Sign Up</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="about" id="about">
+    <h2>Your Health Data, Simplified</h2>
+    <p>Health Hive brings together all your health metrics in one place, making it easy to track progress, set goals, and celebrate achievements along your health journey.</p>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href').substring(1);
+                if (!targetId) return;
+                
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

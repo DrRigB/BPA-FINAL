@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ team.name }} - Health Hive{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="team-dashboard-content">
+        <div class="team-section">
+            <div class="team-header">
+                <div class="team-header-top">
+                    <h1 class="team-title">
+                        <span>👥</span>
+                        {{ team.name }}
+                    </h1>
+                    <div class="team-actions">
+                        <a href="{% url 'dashboard' %}" class="exit-btn">
+                            <span>←</span> Back to Dashboard
+                        </a>
+                        {% if is_leader %}
+                        <a href="#" class="view-code-btn" id="viewTeamCode">
+                            <span>🔑</span> View Team Code
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="team-header-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">{{ total_activities }}</span>
+                        <span class="stat-label">Total Activities</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">{{ total_calories }}</span>
+                        <span class="stat-label">Calories Burned</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">{{ member_count }}</span>
+                        <span class="stat-label">Team Members</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-members-grid">
+                {% for member in members %}
+                <div class="member {% if member.user.id == request.user.id %}active{% endif %}">
+                    <span class="member-name">{{ member.user.username }}</span>
+                    <span class="member-role">{{ member.role }}</span>
+                    <div class="member-stats">
+                        <div>
+                            <span class="stat-value">{{ member.activities_count }}</span>
+                            <span class="stat-label">Activities</span>
+                        </div>
+                        <div>
+                            <span class="stat-value">{{ member.calories_burned }}</span>
+                            <span class="stat-label">Calories</span>
+                        </div>
+                    </div>
+                    <div class="recent-activities">
+                        {% if member.recent_activities %}
+                            {% for activity in member.recent_activities %}
+                            <div class="activity">
+                                <span class="activity-name">{{ activity.name }}</span>
+                                <div class="activity-stats">
+                                    <span>🔥 {{ activity.calories_burned }} cal</span>
+                                    <span>⏱️ {{ activity.duration_minutes }} min</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="no-activities">No recent activities</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Team Code Modal -->
+<div class="modal-overlay" id="teamCodeModal">
+    <div class="modal-content">
+        <h3>Team Code</h3>
+        <p>Share this code with others to let them join your team:</p>
+        <div class="team-code">{{ team.code }}</div>
+        <div class="modal-buttons">
+            <button class="submit-btn" id="copyCode">Copy Code</button>
+            <button class="cancel-btn" id="closeModal">Close</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const members = document.querySelectorAll('.member');
+        members.forEach(member => {
+            member.addEventListener('click', () => {
+                members.forEach(m => m.classList.remove('active'));
+                member.classList.add('active');
+            });
+        });
+
+        // Modal functionality
+        const viewTeamCodeBtn = document.getElementById('viewTeamCode');
+        const teamCodeModal = document.getElementById('teamCodeModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const copyCodeBtn = document.getElementById('copyCode');
+
+        if (viewTeamCodeBtn) {
+            viewTeamCodeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                teamCodeModal.style.display = 'flex';
+            });
+        }
+
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', () => {
+                teamCodeModal.style.display = 'none';
+            });
+        }
+
+        if (copyCodeBtn) {
+            copyCodeBtn.addEventListener('click', () => {
+                const code = document.querySelector('.team-code').textContent;
+                navigator.clipboard.writeText(code);
+                copyCodeBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyCodeBtn.textContent = 'Copy Code';
+                }, 2000);
+            });
+        }
+
+        // Close modal when clicking outside
+        teamCodeModal.addEventListener('click', (e) => {
+            if (e.target === teamCodeModal) {
+                teamCodeModal.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %} 
